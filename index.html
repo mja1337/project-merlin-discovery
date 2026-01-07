@@ -17,464 +17,349 @@
       margin:0;
       padding:20px
     }
-    h1{
-      text-align:center;
-      color:#ff0000;
-      margin-bottom:4px
-    }
-    .sub{
-      text-align:center;
-      opacity:.8;
-      margin-bottom:24px
-    }
-    .timeline-container{
-      position:relative;
-      margin:40px auto;
-      max-width:1200px
-    }
-    .timeline{
-      display:flex;
-      justify-content:space-between;
-      position:relative;
-      margin-top:110px
-    }
+    h1{ text-align:center; color:#ff0000; margin-bottom:4px }
+    .sub{ text-align:center; opacity:.8; margin-bottom:24px }
+
+    .timeline-container{ position:relative; margin:40px auto; max-width:1200px }
+    .timeline{ display:flex; justify-content:space-between; position:relative; margin-top:110px }
+
     .timeline-line{
-      position:absolute;
-      top:150px;
-      left:0;
-      right:0;
-      height:4px;
-      background:#000;
-      z-index:0
+      position:absolute; top:150px; left:0; right:0;
+      height:4px; background:#000; z-index:0
     }
     .timeline-gradient{
-      position:absolute;
-      top:150px;
-      left:0;
-      right:0;
-      height:4px;
-      z-index:1;
+      position:absolute; top:150px; left:0; right:0; height:4px; z-index:1;
       pointer-events:none;
       background:linear-gradient(to right,var(--grad-red) 0%,var(--grad-orange) var(--orange-stop),var(--grad-green) 100%)
     }
     .timeline-cover{
-      position:absolute;
-      top:150px;
-      right:0;
-      height:4px;
-      background:#000;
-      z-index:2;
-      pointer-events:none
+      position:absolute; top:150px; right:0; height:4px; background:#000;
+      z-index:2; pointer-events:none
     }
+
     .gate{
-      position:relative;
-      text-align:center;
-      width:120px;
-      z-index:3;
-      font-weight:600
+      position:relative; text-align:center; width:120px; z-index:3; font-weight:600
     }
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
-    .gate small{
-      display:block;
-      font-weight:400;
-      opacity:.75;
-      margin-top:2px
-    }
-    .gate:hover .tooltip{
-      visibility:visible;
-      opacity:1
-    }
+    .gate small{ display:block; font-weight:400; opacity:.75; margin-top:2px }
+    .gate:hover .tooltip{ visibility:visible; opacity:1 }
+
     .tooltip{
       visibility:hidden;
-      background:#333;
-      color:#fff;
-      text-align:left;
-      border-radius:8px;
-      padding:10px 12px;
-      position:absolute;
-      bottom:10px;
-      left:50%;
-      transform:translateX(-50%);
-      opacity:0;
-      transition:opacity .25s;
-      z-index:5;
-      width:300px;
+      background:#333; color:#fff; text-align:left;
+      border-radius:8px; padding:10px 12px;
+      position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+      opacity:0; transition:opacity .25s; z-index:5; width:340px;
       box-shadow:0 8px 20px rgba(0,0,0,.25)
     }
     .tooltip b{display:block;margin-bottom:6px}
     .tooltip ul{margin:0;padding-left:18px}
-
-    /* Hide the old mid-week dots; we’ll render true week-start ticks instead */
-    .gate .dot{display:none}
+    .tooltip .muted{opacity:.85; font-size:12px; margin-top:6px}
 
     /* Rocket + tooltip */
-    #merlin{
-      position:absolute;
-      top:60px;
-      transition:left .5s;
-      z-index:6
-    }
-    #merlin:hover + .merlin-tooltip{
-      visibility:visible;
-      opacity:1
-    }
+    #merlin{ position:absolute; top:60px; transition:left .5s; z-index:6 }
+    #merlin:hover + .merlin-tooltip{ visibility:visible; opacity:1 }
     .merlin-tooltip{
       visibility:hidden;
-      background:#000;
-      color:#fff;
-      text-align:left;
-      border-radius:8px;
-      padding:10px 12px;
-      position:absolute;
-      top:160px;
-      left:50%;
-      transform:translateX(-50%);
-      opacity:0;
-      transition:opacity .25s;
-      z-index:7;
-      width:320px;
+      background:#000; color:#fff; text-align:left;
+      border-radius:8px; padding:10px 12px;
+      position:absolute; top:160px; left:50%; transform:translateX(-50%);
+      opacity:0; transition:opacity .25s; z-index:7; width:360px;
       box-shadow:0 8px 20px rgba(0,0,0,.35)
     }
 
-    /* Week-start ticks, aligned to the exact start of each week */
-    .ticks{
-      position:absolute;
-      top:142px;
-      left:0;
-      right:0;
-      height:16px;
-      z-index:4
-    }
+    /* Week-start ticks */
+    .ticks{ position:absolute; top:142px; left:0; right:0; height:16px; z-index:4 }
     .ticks .tick{
-      position:absolute;
-      top:0;
-      width:16px;
-      height:16px;
-      border-radius:50%;
-      background:#ff0000;
-      transform:translateX(-50%)
+      position:absolute; top:0; width:16px; height:16px; border-radius:50%;
+      background:#ff0000; transform:translateX(-50%)
     }
 
-    /* Xmas band */
+    /* Xmas band (gap highlight) */
     .holiday-band{
-      position:absolute;
-      top:140px;
-      height:10px;
+      position:absolute; top:140px; height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
-      z-index:2;
-      display:none
+      z-index:2; display:none
     }
     .holiday-band .label{
-      position:absolute;
-      top:-22px;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:12px;
-      background:#fff;
-      padding:2px 6px;
-      border-radius:6px;
+      position:absolute; top:-22px; left:50%; transform:translateX(-50%);
+      font-size:12px; background:#fff; padding:2px 6px; border-radius:6px;
       border:1px solid rgba(255,0,0,.6)
     }
   </style>
 </head>
+
 <body>
   <h1>Project Merlin — Discovery Timeline</h1>
-  <div class="sub">Weekly milestones from 29 Oct 2025 to 09 Mar 2026 (Discovery only)</div>
+  <div class="sub" id="subtitle"></div>
 
   <div class="timeline-container">
-    <img id="merlin" src="https://github.com/mja1337/project-merlin-discovery/blob/main/merlin_rocket.png?raw=true" width="150" height="100" alt="Merlin Rocket"/>
+    <img id="merlin"
+      src="https://github.com/mja1337/project-merlin-discovery/blob/main/merlin_rocket.png?raw=true"
+      width="150" height="100" alt="Merlin Rocket"/>
     <div class="merlin-tooltip" id="merlinTooltip"></div>
 
     <div class="timeline-line"></div>
     <div class="timeline-gradient"></div>
     <div class="timeline-cover" id="timelineCover"></div>
 
-    <!-- Week-start ticks -->
     <div class="ticks" id="ticks"></div>
 
-    <!-- Xmas highlight band gets sized/placed by JS -->
     <div class="holiday-band" id="xmasBand">
       <div class="label">Christmas & New Year</div>
     </div>
 
-    <div class="timeline" id="timeline">
-      <div class="gate">
-        Week 1
-        <small>27 Oct 2025 – 02 Nov 2025</small>
-        <div class="tooltip">
-          <b>Kickoff + R2R 1–2</b>
-          <ul>
-            <li>29 Oct 2025: Introductory Session</li>
-            <li>30 Oct 2025: Record to Report 1</li>
-            <li>31 Oct 2025: Record to Report 2</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gate">
-        Week 2
-        <small>03 Nov 2025 – 09 Nov 2025</small>
-        <div class="tooltip">
-          <b>Finance: R2R 3–5</b>
-          <ul>
-            <li>04 Nov 2025: Record to Report 3</li>
-            <li>05 Nov 2025: Record to Report 4</li>
-            <li>07 Nov 2025: Record to Report 5</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gate">
-        Week 3
-        <small>10 Nov 2025 – 16 Nov 2025</small>
-        <div class="tooltip">
-          <b>P2P 1–3</b>
-          <ul>
-            <li>11 Nov 2025: Procure to Pay 1</li>
-            <li>13 Nov 2025: Procure to Pay 2</li>
-            <li>14 Nov 2025: Procure to Pay 3</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gate">
-        Week 4
-        <small>17 Nov 2025 – 23 Nov 2025</small>
-        <div class="tooltip">
-          <b>P2P 4 + Fixed Assets</b>
-          <ul>
-            <li>18 Nov 2025: Procure to Pay 4 - RTM Review</li>
-            <li>20 Nov 2025: Fixed Assets</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gate">
-        Week 5
-        <small>24 Nov 2025 – 30 Nov 2025</small>
-        <div class="tooltip">
-          <b>Operations: D2B 1–4</b>
-          <ul>
-            <li>25 Nov 2025: Design to Build 1</li>
-            <li>26 Nov 2025: Design to Build/WMS 2</li>
-            <li>27 Nov 2025: Design to Build 3</li>
-            <li>28 Nov 2025: Design to Build 4 - RTM Review</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gate">
-        Week 6
-        <small>01 Dec 2025 – 07 Dec 2025</small>
-        <div class="tooltip">
-          <b>O2C 1–3 + D2B 5</b>
-          <ul>
-            <li>02 Dec 2025: Customers + Order to Cash 1 (CCO/CARE)</li>
-            <li>03 Dec 2025: Customers + Order to Cash 2 (CS/AD/ES)</li>
-            <li>04 Dec 2025: Customers + Order to Cash 3</li>
-            <li>05 Dec 2025: Design to Build 5 - RTM Review</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- NEW WEEK 7 -->
-      <div class="gate">
-        Week 7
-        <small>08 Dec 2025 – 14 Dec 2025</small>
-        <div class="tooltip">
-          <b>Design to Build 6</b>
-          <ul>
-            <li>10 Dec 2025: Design to Build 6 - RTM Review 2</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 7 -> Week 8 -->
-      <div class="gate">
-        Week 8
-        <small>15 Dec 2025 – 21 Dec 2025</small>
-        <div class="tooltip">
-          <b>Lead to Quote 1–2</b>
-          <ul>
-            <li>16 Dec 2025: Lead to Quote 1 - Marketing</li>
-            <li>17 Dec 2025: Lead to Quote 2 - IQ/Eagle</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 8 -> Week 9 -->
-      <div class="gate">
-        Week 9
-        <small>12 Jan 2026 – 18 Jan 2026</small>
-        <div class="tooltip">
-          <b>Field Service 1–4 (incl. Cases)</b>
-          <ul>
-            <li>12 Jan 2026: Field Service 1</li>
-            <li>13 Jan 2026: Field Service 2</li>
-            <li>14 Jan 2026: Field Service 3 - Cases</li>
-            <li>15 Jan 2026: Field Service 4</li>
-            <li>16 Jan 2026: Integrations 1</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 9 -> Week 10 -->
-      <div class="gate">
-        Week 10
-        <small>19 Jan 2026 – 25 Jan 2026</small>
-        <div class="tooltip">
-          <b>Integrations 2–3 + Data Migration 1–2</b>
-          <ul>
-            <li>19 Jan 2026: Integrations 2</li>
-            <li>20 Jan 2026: Integrations 3</li>
-            <li>21 Jan 2026: Data Migration 1</li>
-            <li>22 Jan 2026: Data Migration 2</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 10 -> Week 11 -->
-      <div class="gate">
-        Week 11
-        <small>02 Feb 2026 – 08 Feb 2026</small>
-        <div class="tooltip">
-          <b>Billing & Revenue 1–5 (ARM, ZAB, GT)</b>
-          <ul>
-            <li>02 Feb 2026: Billing and Revenue 1 - ARM & ZAB Questionnaire</li>
-            <li>03 Feb 2026: Billing and Revenue 2 - ZAB Essentials</li>
-            <li>04 Feb 2026: Billing and Revenue 3 - ZAB API - Approvals</li>
-            <li>05 Feb 2026: Billing & Revenue 4 - ARM High level req - Review findings</li>
-            <li>06 Feb 2026: Billing & Revenue 5 - Deep dive Use case 1</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 11 -> Week 12 -->
-      <div class="gate">
-        Week 12
-        <small>09 Feb 2026 – 15 Feb 2026</small>
-        <div class="tooltip">
-          <b>Billing & Revenue 6–9 (ARM, ZAB, GT)</b>
-          <ul>
-            <li>10 Feb 2026: Billing & Revenue 6 - Grant Thornton - Session 1</li>
-            <li>11 Feb 2026: Billing & Revenue 7 - Deep dive Use case 2</li>
-            <li>12 Feb 2026: Billing & Revenue 8 - Grant Thornton - Session 2</li>
-            <li>13 Feb 2026: Billing & Revenue 9 - Deep dive Use case 3</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 12 -> Week 13 -->
-      <div class="gate">
-        Week 13
-        <small>16 Feb 2026 – 22 Feb 2026</small>
-        <div class="tooltip">
-          <b>Billing & Revenue 10–12 (ARM, ZAB, GT)</b>
-          <ul>
-            <li>16 Feb 2026: Billing & Revenue 10 - Deep dive Use case 4</li>
-            <li>18 Feb 2026: Billing & Revenue 11 - Deep dive Use case 5</li>
-            <li>20 Feb 2026: Billing & Revenue 12 -  2nd Review of Findings</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 13 -> Week 14 -->
-      <div class="gate">
-        Week 14
-        <small>23 Feb 2026 – 01 Mar 2026</small>
-        <div class="tooltip">
-          <b>Onsite BRD reviews</b>
-          <ul>
-            <li>26 Feb 2026: On site review BRD with Team 1</li>
-            <li>27 Feb 2026: On site review BRD with Team 2</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Old Week 14 -> Week 15 -->
-      <div class="gate">
-        Week 15
-        <small>09 Mar 2026 – 15 Mar 2026</small>
-        <div class="tooltip">
-          <b>BRD finish & onsite reviews</b>
-          <ul>
-            <li>09 Mar 2026: Final BRD agreement and adjustment to plan and commercials.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <div class="timeline" id="timeline"></div>
   </div>
 
   <script>
-    // Weekly boundaries for positioning
-    const weekStarts = [
-      new Date('2025-10-27'), // Week 1
-      new Date('2025-11-03'), // Week 2
-      new Date('2025-11-10'), // Week 3
-      new Date('2025-11-17'), // Week 4
-      new Date('2025-11-24'), // Week 5
-      new Date('2025-12-01'), // Week 6
-      new Date('2025-12-08'), // Week 7 (D2B 6 - RTM Review 2)
-      new Date('2025-12-15'), // Week 8 (Lead to Quote)
-      new Date('2026-01-12'), // Week 9 (Field Service)
-      new Date('2026-01-19'), // Week 10 (Integrations / Data Migration)
-      new Date('2026-02-02'), // Week 11 (Billing & Revenue 1–5)
-      new Date('2026-02-09'), // Week 12 (Billing & Revenue 6–9)
-      new Date('2026-02-16'), // Week 13 (Billing & Revenue 10–12)
-      new Date('2026-02-23'), // Week 14 (Onsite BRD reviews)
-      new Date('2026-03-09')  // Week 15 (BRD finish & onsite reviews)
-    ];
-    const weekEnds   = [
-      new Date('2025-11-02'), // Week 1
-      new Date('2025-11-09'), // Week 2
-      new Date('2025-11-16'), // Week 3
-      new Date('2025-11-23'), // Week 4
-      new Date('2025-11-30'), // Week 5
-      new Date('2025-12-07'), // Week 6
-      new Date('2025-12-14'), // Week 7
-      new Date('2025-12-21'), // Week 8
-      new Date('2026-01-18'), // Week 9
-      new Date('2026-01-25'), // Week 10
-      new Date('2026-02-08'), // Week 11
-      new Date('2026-02-15'), // Week 12
-      new Date('2026-02-22'), // Week 13
-      new Date('2026-03-01'), // Week 14
-      new Date('2026-03-15')  // Week 15
-    ];
+    /**********************************************************************
+     * 1) DROP-IN SCHEDULE (edit only this section)
+     **********************************************************************/
 
-    const gates = document.querySelectorAll('.gate');
-    const merlin = document.getElementById('merlin');
-    const merlinTooltip = document.getElementById('merlinTooltip');
-    const cover = document.getElementById('timelineCover');
-    const timeline = document.getElementById('timeline');
-    const xmasBand = document.getElementById('xmasBand');
-    const ticksEl = document.getElementById('ticks');
+    // Option A: paste TSV/Copy-from-Excel here (Date[TAB]Workshop Name)
+    const WORKSHOPS_TSV = `
+Date	Workshop Name
+29/10/2025	Introductory Session
+30/10/2025	Record to Report 1
+31/10/2025	Record to Report 2
+04/11/2025	Record to Report 3
+05/11/2025	Record to Report 4
+07/11/2025	Record to Report 5
+11/11/2025	Procure to Pay 1
+13/11/2025	Procure to Pay 2
+14/11/2025	Procure to Pay 3
+18/11/2025	Procure to Pay 4 - RTM Review
+20/11/2025	Fixed Assets
+25/11/2025	Design to Build 1
+26/11/2025	Design to Build/WMS 2
+27/11/2025	Design to Build 3
+28/11/2025	Design to Build 4 - RTM Review
+02/12/2025	Customers + Order to Cash 1 (CCO/CARE)
+03/12/2025	Customers + Order to Cash 2 (CS/AD/ES)
+04/12/2025	Customers + Order to Cash 3
+05/12/2025	Design to Build 5 - RTM Review
+10/12/2025	Design to Build 6 and Procure to Pay  5  - RTM Reviews
+16/12/2025	Lead to Quote 1 - Marketing
+17/12/2025	Lead to Quote 2 - IQ/Eagle
+12/01/2026	Field Service 1 (PM)
+13/01/2026	Field Service 2
+14/01/2026	Field Service 3
+15/01/2026	Field Service 4
+16/01/2026	Field Service 5 (PM)
+20/01/2026	Integrations 1
+21/01/2026	Integrations 2
+22/01/2026	Integrations 3
+27/01/2026	Data Migration 1
+28/01/2026	Data Migration 2
+30/01/2026	Data Migration 3 RTM Review
+02/02/2026	Billing and Revenue 1 - ARM & ZAB Questionnaire
+03/02/2026	Billing and Revenue 2 - ZAB Essentials
+04/02/2026	Billing and Revenue 3 - ZAB API - Approvals
+05/02/2026	Billing & Revenue 4 - ARM High level req - Review findings
+06/02/2026	Billing & Revenue 5 - Deep dive Use case 1
+10/02/2026	Billing & Revenue 6 - Grant Thornton - Session 1
+11/02/2026	Billing & Revenue 7 - Deep dive Use case 2
+12/02/2026	Billing & Revenue 8 - Grant Thornton - Session 2
+13/02/2026	Billing & Revenue 9 - Deep dive Use case 3
+16/02/2026	Billing & Revenue 10 - Deep dive Use case 4
+18/02/2026	Billing & Revenue 11 - Deep dive Use case 5
+20/02/2026	Discovery Session -Billing & Revenue 12 Deep dive Use Cases 6
+23/02/2026	Discovery Session -Billing & Revenue 13 Deep dive Use Cases 7
+25/02/2026	Discovery Session -Billing & Revenue 14 Deep dive Use Cases 8
+26/02/2026	Discovery Session -Billing & Revenue 15 Deep dive Use Cases 9
+27/02/2026	Discovery Session -Billing & Revenue 16 - Review of Findings
+03/03/2026	SuiteProjects  - Session 1 (AM)
+03/03/2026	Sales Commission Demo (PM)
+09/03/2026	Case Management
+10/03/2026	O2C RTM 1
+11/03/2026	O2C RTM 2
+13/03/2026	O2C RTM 3
+16/03/2026	O2C RTM 4
+18/03/2026	O2C RTM 5
+07/04/2026	On site review BRD with Team 1
+08/04/2026	On site review BRD with Team 2
+`.trim();
+
+    /**********************************************************************
+     * 2) PARSING + DATE UTILITIES
+     **********************************************************************/
+    const pad2 = n => String(n).padStart(2, "0");
+
+    function ukToISO(uk){ // "DD/MM/YYYY" -> "YYYY-MM-DD"
+      const [dd, mm, yyyy] = uk.split("/").map(s => s.trim());
+      return `${yyyy}-${pad2(mm)}-${pad2(dd)}`;
+    }
+
+    function isoToUK(iso){
+      const [y,m,d] = iso.split("-").map(Number);
+      return `${pad2(d)}/${pad2(m)}/${y}`;
+    }
+
+    function isoToDate(iso){
+      // Construct local date at midnight without timezone surprises:
+      const [y,m,d] = iso.split("-").map(Number);
+      return new Date(y, m-1, d);
+    }
+
+    function startOfWeekMonday(d){
+      const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const day = copy.getDay(); // 0 Sun..6 Sat
+      const diff = (day === 0 ? -6 : 1 - day); // back to Monday
+      copy.setDate(copy.getDate() + diff);
+      copy.setHours(0,0,0,0);
+      return copy;
+    }
+
+    function endOfWeekSunday(monday){
+      const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
+      d.setDate(d.getDate() + 6);
+      d.setHours(23,59,59,999);
+      return d;
+    }
 
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
-    // Map a progress value (0..n-1) to a left pixel, using the timeline width.
+    function parseWorkshopsFromTSV(tsv){
+      const lines = tsv.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const out = [];
+      for (const line of lines){
+        if (/^Date\tWorkshop Name/i.test(line)) continue;
+        const parts = line.split("\t");
+        if (parts.length < 2) continue;
+        const dateUK = parts[0].trim();
+        const name = parts.slice(1).join("\t").trim();
+        out.push({ date: ukToISO(dateUK), name });
+      }
+      // Sort by date then name (important for same-day AM/PM)
+      out.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+      return out;
+    }
+
+    const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
+
+    /**********************************************************************
+     * 3) BUILD WEEKS (GATES) AUTOMATICALLY FROM WORKSHOPS
+     **********************************************************************/
+    function buildWeeks(workshops){
+      if (!workshops.length) return [];
+
+      const minDate = isoToDate(workshops[0].date);
+      const maxDate = isoToDate(workshops[workshops.length - 1].date);
+
+      const firstMonday = startOfWeekMonday(minDate);
+      const lastMonday = startOfWeekMonday(maxDate);
+
+      const weeks = [];
+      for (let cur = new Date(firstMonday); cur <= lastMonday; cur.setDate(cur.getDate() + 7)){
+        const weekStart = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate());
+        const weekEnd = endOfWeekSunday(weekStart);
+
+        const items = workshops.filter(w => {
+          const wd = isoToDate(w.date);
+          return wd >= weekStart && wd <= weekEnd;
+        });
+
+        weeks.push({
+          start: weekStart,
+          end: weekEnd,
+          items
+        });
+      }
+      return weeks;
+    }
+
+    const weeks = buildWeeks(WORKSHOPS);
+
+    /**********************************************************************
+     * 4) RENDER TIMELINE (GATES + TOOLTIPS) FROM WEEKS
+     **********************************************************************/
+    const timeline = document.getElementById('timeline');
+    const subtitle = document.getElementById('subtitle');
+
+    function fmtRange(start, end){
+      const s = `${pad2(start.getDate())} ${start.toLocaleString("en-GB",{month:"short"})} ${start.getFullYear()}`;
+      const e = `${pad2(end.getDate())} ${end.toLocaleString("en-GB",{month:"short"})} ${end.getFullYear()}`;
+      return `${s} – ${e}`;
+    }
+
+    function renderTimeline(){
+      timeline.innerHTML = weeks.map((w, i) => {
+        const weekNum = i + 1;
+
+        const listItems = w.items.length
+          ? `<ul>${w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")}</ul>`
+          : `<div class="muted">No workshops scheduled this week.</div>`;
+
+        const title = w.items.length
+          ? escapeHtml(w.items[0].name).slice(0, 50) + (w.items[0].name.length > 50 ? "…" : "")
+          : "No workshops";
+
+        return `
+          <div class="gate">
+            Week ${weekNum}
+            <small>${fmtRange(w.start, w.end)}</small>
+            <div class="tooltip">
+              <b>${title}</b>
+              ${listItems}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Subtitle from actual schedule bounds
+      const first = weeks[0]?.start;
+      const last = weeks[weeks.length-1]?.end;
+      subtitle.textContent = first && last
+        ? `Weekly milestones from ${fmtRange(first, first).slice(0, 11)} to ${fmtRange(last, last).slice(0, 11)} (Discovery only)`
+        : `Weekly milestones (Discovery only)`;
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    renderTimeline();
+
+    /**********************************************************************
+     * 5) MERLIN POSITIONING / PROGRESS (USES COMPUTED weekStarts/weekEnds)
+     **********************************************************************/
+    const gates = () => document.querySelectorAll('.gate');
+    const merlin = document.getElementById('merlin');
+    const merlinTooltip = document.getElementById('merlinTooltip');
+    const cover = document.getElementById('timelineCover');
+    const ticksEl = document.getElementById('ticks');
+    const xmasBand = document.getElementById('xmasBand');
+
+    function weekStarts(){ return weeks.map(w => new Date(w.start)); }
+    function weekEnds(){ return weeks.map(w => new Date(w.end)); }
+
     function leftForIndex(progress){
-      const fraction = clamp(progress/(gates.length-1), 0, 1);
+      const gs = gates();
+      const fraction = clamp(progress/(gs.length-1), 0, 1);
       return (fraction * timeline.offsetWidth) - (merlin.offsetWidth/2);
     }
 
     function fractionForDate(d){
-      const total = gates.length;
-      if (d <= weekStarts[0]) return 0;
-      if (d >= weekEnds[total-1]) return total-1;
+      const ws = weekStarts();
+      const we = weekEnds();
+      const total = weeks.length;
+
+      if (d <= ws[0]) return 0;
+      if (d >= we[total-1]) return total-1;
+
       for (let i=0;i<total;i++){
-        if (d >= weekStarts[i] && d <= weekEnds[i]){
-          // Fraction within week i
-          const span = (weekEnds[i] - weekStarts[i]);
-          const done = (d - weekStarts[i]);
+        if (d >= ws[i] && d <= we[i]){
+          const span = (we[i] - ws[i]);
+          const done = (d - ws[i]);
           const frac = span > 0 ? (done / span) : 0;
           return i + frac;
         }
-        if (d < weekStarts[i]){
-          const prevEnd = weekEnds[i-1];
-          const span = (weekStarts[i] - prevEnd);
+        if (d < ws[i]){
+          const prevEnd = we[i-1];
+          const span = (ws[i] - prevEnd);
           const done = (d - prevEnd);
           return (i-1) + (span > 0 ? done/span : 0);
         }
@@ -483,30 +368,31 @@
     }
 
     function updateMerlinPosition(progress){
+      const gs = gates();
       merlin.style.left = leftForIndex(progress) + 'px';
-      const idx = clamp(Math.floor(progress),0,gates.length-1);
+      const idx = clamp(Math.floor(progress), 0, gs.length-1);
 
-      // Reset classes, then set completed/current
-      gates.forEach((g,i)=>{
+      gs.forEach((g,i)=>{
         g.classList.remove('completed','current');
         if (i < idx) g.classList.add('completed');
         else if (i === idx) g.classList.add('current');
       });
 
-      const tip = gates[idx].querySelector('.tooltip').innerHTML;
+      const tip = gs[idx].querySelector('.tooltip').innerHTML;
       merlinTooltip.innerHTML = `<strong>Current Week:</strong><br>${tip}`;
     }
 
     function updateCover(progress){
-      const fraction = clamp(progress/(gates.length-1),0,1);
+      const gs = gates();
+      const fraction = clamp(progress/(gs.length-1),0,1);
       const pct = (fraction*100).toFixed(4);
       cover.style.left = pct+'%';
       cover.style.width = (100 - pct)+'%';
     }
 
-    // Build week-start ticks at exact 0%, 1/(n-1), …, 100%
     function buildTicks(){
-      const total = gates.length;
+      const gs = gates();
+      const total = gs.length;
       ticksEl.innerHTML = '';
       for (let i = 0; i < total; i++){
         const pct = (i/(total-1))*100;
@@ -517,27 +403,46 @@
       }
     }
 
-    // Xmas band: visually fill the gap between Week 8 and Week 9
-    function placeXmasBand(){
-      const total = gates.length;
+    // Highlight the *largest* gap between consecutive scheduled weeks (typically Xmas/New Year)
+    function placeLargestGapBand(){
+      xmasBand.style.display = 'none';
+      const total = weeks.length;
+      if (total < 2) return;
+
+      // Find gaps between weeks that have workshops vs weeks with none
+      // Specifically: locate consecutive "empty weeks" run(s) and highlight the biggest run.
+      const empty = weeks.map(w => w.items.length === 0);
+
+      let best = { startIdx: -1, endIdx: -1, len: 0 };
+      let runStart = -1;
+
+      for (let i=0; i<empty.length; i++){
+        if (empty[i] && runStart === -1) runStart = i;
+        if ((!empty[i] || i === empty.length-1) && runStart !== -1){
+          const runEnd = empty[i] ? i : i-1;
+          const len = runEnd - runStart + 1;
+          if (len > best.len) best = { startIdx: runStart, endIdx: runEnd, len };
+          runStart = -1;
+        }
+      }
+
+      if (best.len === 0) return;
+
       const width = timeline.offsetWidth;
       const step = width/(total-1);
 
-      // index of the last week before the break (Week 8 => index 7)
-      const weekBeforeBreak = 7;
-      // index of the first week after the break (Week 9 => index 8)
-      const weekAfterBreak = 8;
+      // Band should sit between the ticks that bound the empty run
+      const leftTickIndex = Math.max(0, best.startIdx - 1);
+      const rightTickIndex = Math.min(total-1, best.endIdx + 1);
 
-      let leftPx = step * weekBeforeBreak;
-      let rightPx = step * weekAfterBreak;
+      let leftPx = step * leftTickIndex;
+      let rightPx = step * rightTickIndex;
 
-      // Pull the band in from each tick so it sits clearly in the gap
-      const padding = 10; // pixels
+      const padding = 10;
       leftPx += padding;
       rightPx -= padding;
 
       const bandWidth = Math.max(12, rightPx - leftPx);
-
       xmasBand.style.left = leftPx + 'px';
       xmasBand.style.width = bandWidth + 'px';
       xmasBand.style.display = 'block';
@@ -553,7 +458,7 @@
       buildTicks();
       updateMerlinPosition(progress);
       updateCover(progress);
-      placeXmasBand();
+      placeLargestGapBand();
     }
 
     updateAll();
