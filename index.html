@@ -28,25 +28,26 @@
       margin-bottom:24px
     }
 
-    /* Layout container */
+    /* Container */
     .timeline-container{
       position:relative;
-      margin:60px auto;          /* was 40px */
+      margin:60px auto;
       max-width:1200px
     }
 
-    /* Gates row */
+    /* Gates row (week headers) */
     .timeline{
       display:flex;
       justify-content:space-between;
+      align-items:flex-start;        /* keep all week headers aligned to the same top line */
       position:relative;
-      margin-top:160px           /* was 110px */
+      margin-top:170px               /* pushes timeline content down so headers have space */
     }
 
-    /* Main line */
+    /* Line (moved down to create clear separation from headers + Merlin) */
     .timeline-line{
       position:absolute;
-      top:185px;                 /* was 150px */
+      top:215px;                     /* was 185px */
       left:0;
       right:0;
       height:4px;
@@ -55,7 +56,7 @@
     }
     .timeline-gradient{
       position:absolute;
-      top:185px;                 /* was 150px */
+      top:215px;                     /* was 185px */
       left:0;
       right:0;
       height:4px;
@@ -65,7 +66,7 @@
     }
     .timeline-cover{
       position:absolute;
-      top:185px;                 /* was 150px */
+      top:215px;                     /* was 185px */
       right:0;
       height:4px;
       background:#000;
@@ -77,18 +78,29 @@
     .gate{
       position:relative;
       text-align:center;
-      width:110px;               /* was 120px */
+      width:110px;
       z-index:3;
-      font-weight:600
+      font-weight:600;
+      line-height:1.15;
     }
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
+
+    /* Force consistent header layout so future weeks align with earlier ones */
     .gate small{
       display:block;
       font-weight:400;
       opacity:.75;
-      margin-top:2px
+      margin-top:6px;
+      min-height:36px;               /* keeps date block height consistent across all gates */
     }
+
+    /* Remove bolding differences: make all week title labels regular-weight */
+    .gate .wk-title{
+      font-weight:400;               /* makes Week X not bold everywhere */
+      display:block;
+    }
+
     .gate:hover .tooltip{
       visibility:visible;
       opacity:1
@@ -102,7 +114,7 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      bottom:-10px;              /* was 10px */
+      bottom:-10px;
       left:50%;
       transform:translateX(-50%);
       opacity:0;
@@ -114,14 +126,12 @@
     .tooltip b{display:block;margin-bottom:6px}
     .tooltip ul{margin:0;padding-left:18px}
     .tooltip .muted{opacity:.85;font-size:12px;margin-top:6px}
-
-    /* Hide the old mid-week dots; we’ll render true week-start ticks instead */
     .gate .dot{display:none}
 
-    /* Rocket + tooltip */
+    /* Merlin moved DOWN (closer to line), while line moved further DOWN for a clean gap */
     #merlin{
       position:absolute;
-      top:10px;                  /* was 60px */
+      top:85px;                      /* was 10px — lowered to stop overlapping header text */
       transition:left .5s;
       z-index:6
     }
@@ -137,7 +147,7 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      top:205px;                 /* was 160px */
+      top:235px;                     /* align tooltip with new line position */
       left:50%;
       transform:translateX(-50%);
       opacity:0;
@@ -147,10 +157,10 @@
       box-shadow:0 8px 20px rgba(0,0,0,.35)
     }
 
-    /* Week-start ticks */
+    /* Ticks (follow line) */
     .ticks{
       position:absolute;
-      top:177px;                 /* was 142px */
+      top:207px;                     /* was 177px */
       left:0;
       right:0;
       height:16px;
@@ -166,10 +176,10 @@
       transform:translateX(-50%)
     }
 
-    /* Xmas band */
+    /* Xmas band (follow line) */
     .holiday-band{
       position:absolute;
-      top:175px;                 /* was 140px */
+      top:205px;                     /* was 175px */
       height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
@@ -178,7 +188,7 @@
     }
     .holiday-band .label{
       position:absolute;
-      top:-28px;                 /* was -22px */
+      top:-28px;
       left:50%;
       transform:translateX(-50%);
       font-size:12px;
@@ -216,7 +226,6 @@
   <script>
     /**********************************************************************
      * DROP-IN SCHEDULE (edit only this section)
-     * Paste TSV/Copy-from-Excel here (Date[TAB]Workshop Name)
      **********************************************************************/
     const WORKSHOPS_TSV = `
 Date	Workshop Name
@@ -363,7 +372,7 @@ Date	Workshop Name
     const weeks = buildMilestoneWeeks(WORKSHOPS);
 
     /**********************************************************************
-     * RENDER TIMELINE (GATES + TOOLTIPS)
+     * RENDER TIMELINE
      **********************************************************************/
     const timeline = document.getElementById('timeline');
     const subtitle = document.getElementById('subtitle');
@@ -377,15 +386,20 @@ Date	Workshop Name
     function renderTimeline(){
       timeline.innerHTML = weeks.map((w, i) => {
         const weekNum = i + 1;
-        const listItems = `<ul>${w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")}</ul>`;
+
+        const listItems = `<ul>${
+          w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
+        }</ul>`;
+
+        // make all titles non-bold by avoiding <b> in the header content itself
         const title = escapeHtml(w.items[0].name);
 
         return `
           <div class="gate">
-            Week ${weekNum}
+            <span class="wk-title">Week ${weekNum}</span>
             <small>${fmtRange(w.start, w.end)}</small>
             <div class="tooltip">
-              <b>${title}</b>
+              <div style="font-weight:400;margin-bottom:6px;">${title}</div>
               ${listItems}
             </div>
           </div>
