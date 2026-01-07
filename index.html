@@ -17,75 +17,165 @@
       margin:0;
       padding:20px
     }
-    h1{ text-align:center; color:#ff0000; margin-bottom:4px }
-    .sub{ text-align:center; opacity:.8; margin-bottom:24px }
-
-    .timeline-container{ position:relative; margin:40px auto; max-width:1200px }
-    .timeline{ display:flex; justify-content:space-between; position:relative; margin-top:110px }
-
+    h1{
+      text-align:center;
+      color:#ff0000;
+      margin-bottom:4px
+    }
+    .sub{
+      text-align:center;
+      opacity:.8;
+      margin-bottom:24px
+    }
+    .timeline-container{
+      position:relative;
+      margin:40px auto;
+      max-width:1200px
+    }
+    .timeline{
+      display:flex;
+      justify-content:space-between;
+      position:relative;
+      margin-top:110px
+    }
     .timeline-line{
-      position:absolute; top:150px; left:0; right:0;
-      height:4px; background:#000; z-index:0
+      position:absolute;
+      top:150px;
+      left:0;
+      right:0;
+      height:4px;
+      background:#000;
+      z-index:0
     }
     .timeline-gradient{
-      position:absolute; top:150px; left:0; right:0; height:4px; z-index:1;
+      position:absolute;
+      top:150px;
+      left:0;
+      right:0;
+      height:4px;
+      z-index:1;
       pointer-events:none;
       background:linear-gradient(to right,var(--grad-red) 0%,var(--grad-orange) var(--orange-stop),var(--grad-green) 100%)
     }
     .timeline-cover{
-      position:absolute; top:150px; right:0; height:4px; background:#000;
-      z-index:2; pointer-events:none
+      position:absolute;
+      top:150px;
+      right:0;
+      height:4px;
+      background:#000;
+      z-index:2;
+      pointer-events:none
     }
-
     .gate{
-      position:relative; text-align:center; width:120px; z-index:3; font-weight:600
+      position:relative;
+      text-align:center;
+      width:120px;
+      z-index:3;
+      font-weight:600
     }
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
-    .gate small{ display:block; font-weight:400; opacity:.75; margin-top:2px }
-    .gate:hover .tooltip{ visibility:visible; opacity:1 }
-
+    .gate small{
+      display:block;
+      font-weight:400;
+      opacity:.75;
+      margin-top:2px
+    }
+    .gate:hover .tooltip{
+      visibility:visible;
+      opacity:1
+    }
     .tooltip{
       visibility:hidden;
-      background:#333; color:#fff; text-align:left;
-      border-radius:8px; padding:10px 12px;
-      position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
-      opacity:0; transition:opacity .25s; z-index:5; width:340px;
+      background:#333;
+      color:#fff;
+      text-align:left;
+      border-radius:8px;
+      padding:10px 12px;
+      position:absolute;
+      bottom:10px;
+      left:50%;
+      transform:translateX(-50%);
+      opacity:0;
+      transition:opacity .25s;
+      z-index:5;
+      width:340px;
       box-shadow:0 8px 20px rgba(0,0,0,.25)
     }
     .tooltip b{display:block;margin-bottom:6px}
     .tooltip ul{margin:0;padding-left:18px}
-    .tooltip .muted{opacity:.85; font-size:12px; margin-top:6px}
+    .tooltip .muted{opacity:.85;font-size:12px;margin-top:6px}
+
+    /* Hide the old mid-week dots; we’ll render true week-start ticks instead */
+    .gate .dot{display:none}
 
     /* Rocket + tooltip */
-    #merlin{ position:absolute; top:60px; transition:left .5s; z-index:6 }
-    #merlin:hover + .merlin-tooltip{ visibility:visible; opacity:1 }
+    #merlin{
+      position:absolute;
+      top:60px;
+      transition:left .5s;
+      z-index:6
+    }
+    #merlin:hover + .merlin-tooltip{
+      visibility:visible;
+      opacity:1
+    }
     .merlin-tooltip{
       visibility:hidden;
-      background:#000; color:#fff; text-align:left;
-      border-radius:8px; padding:10px 12px;
-      position:absolute; top:160px; left:50%; transform:translateX(-50%);
-      opacity:0; transition:opacity .25s; z-index:7; width:360px;
+      background:#000;
+      color:#fff;
+      text-align:left;
+      border-radius:8px;
+      padding:10px 12px;
+      position:absolute;
+      top:160px;
+      left:50%;
+      transform:translateX(-50%);
+      opacity:0;
+      transition:opacity .25s;
+      z-index:7;
+      width:360px;
       box-shadow:0 8px 20px rgba(0,0,0,.35)
     }
 
-    /* Week-start ticks */
-    .ticks{ position:absolute; top:142px; left:0; right:0; height:16px; z-index:4 }
+    /* Week-start ticks, aligned to the exact start of each week */
+    .ticks{
+      position:absolute;
+      top:142px;
+      left:0;
+      right:0;
+      height:16px;
+      z-index:4
+    }
     .ticks .tick{
-      position:absolute; top:0; width:16px; height:16px; border-radius:50%;
-      background:#ff0000; transform:translateX(-50%)
+      position:absolute;
+      top:0;
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      background:#ff0000;
+      transform:translateX(-50%)
     }
 
-    /* Xmas band (gap highlight) */
+    /* Xmas band */
     .holiday-band{
-      position:absolute; top:140px; height:10px;
+      position:absolute;
+      top:140px;
+      height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
-      z-index:2; display:none
+      z-index:2;
+      display:none
     }
     .holiday-band .label{
-      position:absolute; top:-22px; left:50%; transform:translateX(-50%);
-      font-size:12px; background:#fff; padding:2px 6px; border-radius:6px;
+      position:absolute;
+      top:-22px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:12px;
+      background:#fff;
+      padding:2px 6px;
+      border-radius:6px;
       border:1px solid rgba(255,0,0,.6)
     }
   </style>
@@ -105,21 +195,24 @@
     <div class="timeline-gradient"></div>
     <div class="timeline-cover" id="timelineCover"></div>
 
+    <!-- Week-start ticks -->
     <div class="ticks" id="ticks"></div>
 
+    <!-- Xmas highlight band gets sized/placed by JS -->
     <div class="holiday-band" id="xmasBand">
       <div class="label">Christmas & New Year</div>
     </div>
 
+    <!-- Gates are rendered by JS -->
     <div class="timeline" id="timeline"></div>
   </div>
 
   <script>
     /**********************************************************************
-     * 1) DROP-IN SCHEDULE (edit only this section)
+     * DROP-IN SCHEDULE (edit only this section)
+     *
+     * Paste TSV/Copy-from-Excel here (Date[TAB]Workshop Name)
      **********************************************************************/
-
-    // Option A: paste TSV/Copy-from-Excel here (Date[TAB]Workshop Name)
     const WORKSHOPS_TSV = `
 Date	Workshop Name
 29/10/2025	Introductory Session
@@ -184,7 +277,7 @@ Date	Workshop Name
 `.trim();
 
     /**********************************************************************
-     * 2) PARSING + DATE UTILITIES
+     * PARSING + DATE UTILITIES
      **********************************************************************/
     const pad2 = n => String(n).padStart(2, "0");
 
@@ -192,18 +285,15 @@ Date	Workshop Name
       const [dd, mm, yyyy] = uk.split("/").map(s => s.trim());
       return `${yyyy}-${pad2(mm)}-${pad2(dd)}`;
     }
-
     function isoToUK(iso){
       const [y,m,d] = iso.split("-").map(Number);
       return `${pad2(d)}/${pad2(m)}/${y}`;
     }
-
     function isoToDate(iso){
-      // Construct local date at midnight without timezone surprises:
+      // local date at midnight to avoid timezone surprises
       const [y,m,d] = iso.split("-").map(Number);
       return new Date(y, m-1, d);
     }
-
     function startOfWeekMonday(d){
       const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
       const day = copy.getDay(); // 0 Sun..6 Sat
@@ -212,14 +302,12 @@ Date	Workshop Name
       copy.setHours(0,0,0,0);
       return copy;
     }
-
     function endOfWeekSunday(monday){
       const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
       d.setDate(d.getDate() + 6);
       d.setHours(23,59,59,999);
       return d;
     }
-
     function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
     function parseWorkshopsFromTSV(tsv){
@@ -233,48 +321,46 @@ Date	Workshop Name
         const name = parts.slice(1).join("\t").trim();
         out.push({ date: ukToISO(dateUK), name });
       }
-      // Sort by date then name (important for same-day AM/PM)
       out.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
       return out;
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * 3) BUILD WEEKS (GATES) AUTOMATICALLY FROM WORKSHOPS
+     * BUILD "MILESTONE WEEKS" (NOT every calendar week)
+     * - This matches the original behaviour: one gate per scheduled week.
      **********************************************************************/
-    function buildWeeks(workshops){
+    function buildMilestoneWeeks(workshops){
       if (!workshops.length) return [];
 
-      const minDate = isoToDate(workshops[0].date);
-      const maxDate = isoToDate(workshops[workshops.length - 1].date);
+      const map = new Map();
+      for (const w of workshops){
+        const d = isoToDate(w.date);
+        const monday = startOfWeekMonday(d);
+        const key = monday.toISOString().slice(0,10); // YYYY-MM-DD
 
-      const firstMonday = startOfWeekMonday(minDate);
-      const lastMonday = startOfWeekMonday(maxDate);
+        if (!map.has(key)){
+          map.set(key, { start: monday, end: endOfWeekSunday(monday), items: [] });
+        }
+        map.get(key).items.push(w);
+      }
 
-      const weeks = [];
-      for (let cur = new Date(firstMonday); cur <= lastMonday; cur.setDate(cur.getDate() + 7)){
-        const weekStart = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate());
-        const weekEnd = endOfWeekSunday(weekStart);
-
-        const items = workshops.filter(w => {
-          const wd = isoToDate(w.date);
-          return wd >= weekStart && wd <= weekEnd;
-        });
-
-        weeks.push({
-          start: weekStart,
-          end: weekEnd,
-          items
-        });
+      const weeks = Array.from(map.values()).sort((a,b) => a.start - b.start);
+      for (const wk of weeks){
+        wk.items.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
       }
       return weeks;
     }
 
-    const weeks = buildWeeks(WORKSHOPS);
+    const weeks = buildMilestoneWeeks(WORKSHOPS);
 
     /**********************************************************************
-     * 4) RENDER TIMELINE (GATES + TOOLTIPS) FROM WEEKS
+     * RENDER TIMELINE (GATES + TOOLTIPS) FROM WEEKS
      **********************************************************************/
     const timeline = document.getElementById('timeline');
     const subtitle = document.getElementById('subtitle');
@@ -289,13 +375,12 @@ Date	Workshop Name
       timeline.innerHTML = weeks.map((w, i) => {
         const weekNum = i + 1;
 
-        const listItems = w.items.length
-          ? `<ul>${w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")}</ul>`
-          : `<div class="muted">No workshops scheduled this week.</div>`;
+        const listItems = `<ul>${
+          w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
+        }</ul>`;
 
-        const title = w.items.length
-          ? escapeHtml(w.items[0].name).slice(0, 50) + (w.items[0].name.length > 50 ? "…" : "")
-          : "No workshops";
+        // simple title = first workshop name (original had manual headings)
+        const title = escapeHtml(w.items[0].name);
 
         return `
           <div class="gate">
@@ -309,7 +394,6 @@ Date	Workshop Name
         `;
       }).join("");
 
-      // Subtitle from actual schedule bounds
       const first = weeks[0]?.start;
       const last = weeks[weeks.length-1]?.end;
       subtitle.textContent = first && last
@@ -317,21 +401,17 @@ Date	Workshop Name
         : `Weekly milestones (Discovery only)`;
     }
 
-    function escapeHtml(s){
-      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-
     renderTimeline();
 
     /**********************************************************************
-     * 5) MERLIN POSITIONING / PROGRESS (USES COMPUTED weekStarts/weekEnds)
+     * MERLIN POSITIONING / PROGRESS
      **********************************************************************/
     const gates = () => document.querySelectorAll('.gate');
     const merlin = document.getElementById('merlin');
     const merlinTooltip = document.getElementById('merlinTooltip');
     const cover = document.getElementById('timelineCover');
-    const ticksEl = document.getElementById('ticks');
     const xmasBand = document.getElementById('xmasBand');
+    const ticksEl = document.getElementById('ticks');
 
     function weekStarts(){ return weeks.map(w => new Date(w.start)); }
     function weekEnds(){ return weeks.map(w => new Date(w.end)); }
@@ -403,40 +483,26 @@ Date	Workshop Name
       }
     }
 
-    // Highlight the *largest* gap between consecutive scheduled weeks (typically Xmas/New Year)
-    function placeLargestGapBand(){
+    // Highlight the first "big gap" between milestone weeks (Christmas / New Year)
+    function placeGapBand(){
       xmasBand.style.display = 'none';
       const total = weeks.length;
       if (total < 2) return;
 
-      // Find gaps between weeks that have workshops vs weeks with none
-      // Specifically: locate consecutive "empty weeks" run(s) and highlight the biggest run.
-      const empty = weeks.map(w => w.items.length === 0);
-
-      let best = { startIdx: -1, endIdx: -1, len: 0 };
-      let runStart = -1;
-
-      for (let i=0; i<empty.length; i++){
-        if (empty[i] && runStart === -1) runStart = i;
-        if ((!empty[i] || i === empty.length-1) && runStart !== -1){
-          const runEnd = empty[i] ? i : i-1;
-          const len = runEnd - runStart + 1;
-          if (len > best.len) best = { startIdx: runStart, endIdx: runEnd, len };
-          runStart = -1;
-        }
+      let gapIdx = -1;
+      for (let i=0; i<total-1; i++){
+        const a = weeks[i].start;
+        const b = weeks[i+1].start;
+        const days = (b - a) / (1000*60*60*24);
+        if (days > 8) { gapIdx = i; break; }
       }
-
-      if (best.len === 0) return;
+      if (gapIdx === -1) return;
 
       const width = timeline.offsetWidth;
       const step = width/(total-1);
 
-      // Band should sit between the ticks that bound the empty run
-      const leftTickIndex = Math.max(0, best.startIdx - 1);
-      const rightTickIndex = Math.min(total-1, best.endIdx + 1);
-
-      let leftPx = step * leftTickIndex;
-      let rightPx = step * rightTickIndex;
+      let leftPx = step * gapIdx;
+      let rightPx = step * (gapIdx + 1);
 
       const padding = 10;
       leftPx += padding;
@@ -458,7 +524,7 @@ Date	Workshop Name
       buildTicks();
       updateMerlinPosition(progress);
       updateCover(progress);
-      placeLargestGapBand();
+      placeGapBand();
     }
 
     updateAll();
