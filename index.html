@@ -43,25 +43,22 @@
     .timeline{
       display:flex;
       justify-content:space-between;
-      align-items:flex-start;         /* keeps all week headers aligned */
+      align-items:flex-start;
       position:relative;
-      margin-top:170px;
+      margin-top:190px;              /* was 170px (more breathing room) */
     }
 
-    /* Line */
+    /* TIMELINE (moved down) */
     .timeline-line,
     .timeline-gradient,
     .timeline-cover{
       position:absolute;
-      top:215px;
+      top:250px;                     /* was 215px */
       left:0;
       right:0;
       height:4px;
     }
-    .timeline-line{
-      background:#000;
-      z-index:0;
-    }
+    .timeline-line{ background:#000; z-index:0; }
     .timeline-gradient{
       z-index:1;
       pointer-events:none;
@@ -78,26 +75,22 @@
       position:relative;
       text-align:center;
       width:110px;
-      z-index:3;                     /* baseline stacking */
+      z-index:3;
       line-height:1.15;
-      font-weight:400;               /* make all week headers non-bold */
+      font-weight:400;
     }
 
-    /* ✅ IMPORTANT FIX: bring hovered gate + its tooltip above all siblings */
-    .gate:hover{
-      z-index:10000;
-    }
+    /* Bring hovered gate above siblings */
+    .gate:hover{ z-index:10000; }
 
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
 
-    /* Week title */
     .gate .wk-title{
       display:block;
-      font-weight:400;               /* force non-bold */
+      font-weight:400;
     }
 
-    /* Date line: keep consistent height so columns align */
     .gate small{
       display:block;
       font-weight:400;
@@ -106,7 +99,7 @@
       min-height:36px;
     }
 
-    /* ✅ Tooltip: fully opaque + no opacity animation */
+    /* Tooltip: fully opaque */
     .tooltip{
       position:absolute;
       bottom:-10px;
@@ -117,28 +110,26 @@
       pointer-events:none;
 
       width:340px;
-      background:#222;               /* fully opaque solid background */
+      background:#222;
       color:#fff;
       text-align:left;
       border-radius:8px;
       padding:10px 12px;
-      z-index:9999;                  /* high within hovered gate */
+      z-index:9999;
       box-shadow:0 8px 20px rgba(0,0,0,.35);
 
       transition:transform .2s ease;
     }
-
     .gate:hover .tooltip{
       visibility:visible;
       transform:translate(-50%, 0);
     }
-
     .tooltip ul{margin:0;padding-left:18px}
 
-    /* Rocket */
+    /* Merlin (moved down so it stays near the timeline) */
     #merlin{
       position:absolute;
-      top:85px;                      /* lowered so it doesn't overlap headers */
+      top:115px;                     /* was 85px */
       transition:left .5s;
       z-index:6;
     }
@@ -151,21 +142,19 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      top:235px;
+      top:270px;                     /* was 235px (follow timeline down) */
       left:50%;
       transform:translateX(-50%);
       z-index:7;
       width:360px;
       box-shadow:0 8px 20px rgba(0,0,0,.35);
     }
-    #merlin:hover + .merlin-tooltip{
-      visibility:visible;
-    }
+    #merlin:hover + .merlin-tooltip{ visibility:visible; }
 
-    /* Ticks */
+    /* Ticks (follow timeline down) */
     .ticks{
       position:absolute;
-      top:207px;
+      top:242px;                     /* was 207px */
       left:0;
       right:0;
       height:16px;
@@ -181,10 +170,10 @@
       transform:translateX(-50%);
     }
 
-    /* Xmas band */
+    /* Xmas band (follow timeline down) */
     .holiday-band{
       position:absolute;
-      top:205px;
+      top:240px;                     /* was 205px */
       height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
@@ -351,7 +340,7 @@ Date	Workshop Name
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * BUILD "MILESTONE WEEKS" (one gate per scheduled week)
+     * BUILD "MILESTONE WEEKS"
      **********************************************************************/
     function buildMilestoneWeeks(workshops){
       if (!workshops.length) return [];
