@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Project Merlin — Discovery Timeline (Weekly)</title>
+
   <style>
     :root{
       --grad-red:#ff0000;
@@ -10,68 +11,66 @@
       --grad-green:#1db954;
       --orange-stop:60%;
     }
+
     body{
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
       background:#f5f5f5;
       color:#333;
       margin:0;
-      padding:20px
+      padding:20px;
     }
+
     h1{
       text-align:center;
       color:#ff0000;
-      margin-bottom:4px
+      margin-bottom:4px;
     }
+
     .sub{
       text-align:center;
       opacity:.8;
-      margin-bottom:24px
+      margin-bottom:24px;
     }
 
     /* Container */
     .timeline-container{
       position:relative;
       margin:60px auto;
-      max-width:1200px
+      max-width:1200px;
     }
 
     /* Gates row (week headers) */
     .timeline{
       display:flex;
       justify-content:space-between;
-      align-items:flex-start;        /* keep all week headers aligned */
+      align-items:flex-start;         /* keeps all week headers aligned */
       position:relative;
-      margin-top:170px
+      margin-top:170px;
     }
 
     /* Line */
-    .timeline-line{
-      position:absolute;
-      top:215px;
-      left:0;
-      right:0;
-      height:4px;
-      background:#000;
-      z-index:0
-    }
-    .timeline-gradient{
-      position:absolute;
-      top:215px;
-      left:0;
-      right:0;
-      height:4px;
-      z-index:1;
-      pointer-events:none;
-      background:linear-gradient(to right,var(--grad-red) 0%,var(--grad-orange) var(--orange-stop),var(--grad-green) 100%)
-    }
+    .timeline-line,
+    .timeline-gradient,
     .timeline-cover{
       position:absolute;
       top:215px;
+      left:0;
       right:0;
       height:4px;
+    }
+    .timeline-line{
+      background:#000;
+      z-index:0;
+    }
+    .timeline-gradient{
+      z-index:1;
+      pointer-events:none;
+      background:linear-gradient(to right,var(--grad-red) 0%,var(--grad-orange) var(--orange-stop),var(--grad-green) 100%);
+    }
+    .timeline-cover{
       background:#000;
       z-index:2;
-      pointer-events:none
+      pointer-events:none;
     }
 
     /* Gates */
@@ -80,13 +79,19 @@
       text-align:center;
       width:110px;
       z-index:3;
-      font-weight:600;
       line-height:1.15;
+      font-weight:400;               /* make all week headers non-bold */
     }
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
 
-    /* Consistent header layout */
+    /* Week title */
+    .gate .wk-title{
+      display:block;
+      font-weight:400;               /* force non-bold */
+    }
+
+    /* Date line: keep consistent height so columns align */
     .gate small{
       display:block;
       font-weight:400;
@@ -95,52 +100,42 @@
       min-height:36px;
     }
 
-    /* Week titles not bold */
-    .gate .wk-title{
-      font-weight:400;
-      display:block;
-    }
-
-    .gate:hover .tooltip{
-      visibility:visible;
-      opacity:1
-    }
-
-    /* Tooltip: FULLY OPAQUE + always on top */
+    /* ✅ Tooltip: fully opaque (no opacity animation = no bleed-through) */
     .tooltip{
+      position:absolute;
+      bottom:-10px;
+      left:50%;
+      transform:translate(-50%, 6px);
+
       visibility:hidden;
-      background-color:#333;         /* solid background */
+      pointer-events:none;
+
+      width:340px;
+      background:#222;               /* fully opaque solid background */
       color:#fff;
       text-align:left;
       border-radius:8px;
       padding:10px 12px;
-      position:absolute;
-      bottom:-10px;
-      left:50%;
-      transform:translateX(-50%);
-      opacity:0;
-      transition:opacity .25s;
-      z-index:9999;                  /* above headers */
-      width:340px;
-      box-shadow:0 8px 20px rgba(0,0,0,.25);
-      isolation:isolate;             /* prevents blending/bleed-through artifacts */
-    }
-    .tooltip b{display:block;margin-bottom:6px}
-    .tooltip ul{margin:0;padding-left:18px}
-    .tooltip .muted{opacity:.85;font-size:12px;margin-top:6px}
-    .gate .dot{display:none}
+      z-index:9999;
+      box-shadow:0 8px 20px rgba(0,0,0,.35);
 
-    /* Merlin */
+      transition:transform .2s ease;
+    }
+    .gate:hover .tooltip{
+      visibility:visible;
+      transform:translate(-50%, 0);
+    }
+
+    .tooltip ul{margin:0;padding-left:18px}
+
+    /* Rocket */
     #merlin{
       position:absolute;
-      top:85px;
+      top:85px;                      /* lowered so it doesn't overlap headers */
       transition:left .5s;
-      z-index:6
+      z-index:6;
     }
-    #merlin:hover + .merlin-tooltip{
-      visibility:visible;
-      opacity:1
-    }
+
     .merlin-tooltip{
       visibility:hidden;
       background:#000;
@@ -152,11 +147,12 @@
       top:235px;
       left:50%;
       transform:translateX(-50%);
-      opacity:0;
-      transition:opacity .25s;
       z-index:7;
       width:360px;
-      box-shadow:0 8px 20px rgba(0,0,0,.35)
+      box-shadow:0 8px 20px rgba(0,0,0,.35);
+    }
+    #merlin:hover + .merlin-tooltip{
+      visibility:visible;
     }
 
     /* Ticks */
@@ -166,7 +162,7 @@
       left:0;
       right:0;
       height:16px;
-      z-index:4
+      z-index:4;
     }
     .ticks .tick{
       position:absolute;
@@ -175,7 +171,7 @@
       height:16px;
       border-radius:50%;
       background:#ff0000;
-      transform:translateX(-50%)
+      transform:translateX(-50%);
     }
 
     /* Xmas band */
@@ -186,7 +182,7 @@
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
       z-index:2;
-      display:none
+      display:none;
     }
     .holiday-band .label{
       position:absolute;
@@ -197,7 +193,7 @@
       background:#fff;
       padding:2px 6px;
       border-radius:6px;
-      border:1px solid rgba(255,0,0,.6)
+      border:1px solid rgba(255,0,0,.6);
     }
   </style>
 </head>
@@ -311,7 +307,7 @@ Date	Workshop Name
     }
     function startOfWeekMonday(d){
       const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      const day = copy.getDay();
+      const day = copy.getDay(); // 0 Sun..6 Sat
       const diff = (day === 0 ? -6 : 1 - day);
       copy.setDate(copy.getDate() + diff);
       copy.setHours(0,0,0,0);
@@ -347,7 +343,7 @@ Date	Workshop Name
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * BUILD "MILESTONE WEEKS"
+     * BUILD "MILESTONE WEEKS" (one gate per scheduled week)
      **********************************************************************/
     function buildMilestoneWeeks(workshops){
       if (!workshops.length) return [];
@@ -393,14 +389,12 @@ Date	Workshop Name
           w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
         }</ul>`;
 
-        const title = escapeHtml(w.items[0].name);
-
         return `
           <div class="gate">
             <span class="wk-title">Week ${weekNum}</span>
             <small>${fmtRange(w.start, w.end)}</small>
             <div class="tooltip">
-              <div style="font-weight:400;margin-bottom:6px;">${title}</div>
+              <div style="font-weight:400;margin-bottom:6px;">${escapeHtml(w.items[0].name)}</div>
               ${listItems}
             </div>
           </div>
@@ -426,9 +420,6 @@ Date	Workshop Name
     const xmasBand = document.getElementById('xmasBand');
     const ticksEl = document.getElementById('ticks');
 
-    function weekStarts(){ return weeks.map(w => new Date(w.start)); }
-    function weekEnds(){ return weeks.map(w => new Date(w.end)); }
-
     function leftForIndex(progress){
       const gs = gates();
       const fraction = clamp(progress/(gs.length-1), 0, 1);
@@ -436,8 +427,8 @@ Date	Workshop Name
     }
 
     function fractionForDate(d){
-      const ws = weekStarts();
-      const we = weekEnds();
+      const ws = weeks.map(w => new Date(w.start));
+      const we = weeks.map(w => new Date(w.end));
       const total = weeks.length;
 
       if (d <= ws[0]) return 0;
@@ -461,31 +452,28 @@ Date	Workshop Name
     }
 
     function updateMerlinPosition(progress){
-      const gs = gates();
       merlin.style.left = leftForIndex(progress) + 'px';
-      const idx = clamp(Math.floor(progress), 0, gs.length-1);
+      const idx = clamp(Math.floor(progress), 0, gates().length-1);
 
-      gs.forEach((g,i)=>{
+      gates().forEach((g,i)=>{
         g.classList.remove('completed','current');
         if (i < idx) g.classList.add('completed');
         else if (i === idx) g.classList.add('current');
       });
 
-      const tip = gs[idx].querySelector('.tooltip').innerHTML;
+      const tip = gates()[idx].querySelector('.tooltip').innerHTML;
       merlinTooltip.innerHTML = `<strong>Current Week:</strong><br>${tip}`;
     }
 
     function updateCover(progress){
-      const gs = gates();
-      const fraction = clamp(progress/(gs.length-1),0,1);
+      const fraction = clamp(progress/(gates().length-1),0,1);
       const pct = (fraction*100).toFixed(4);
       cover.style.left = pct+'%';
       cover.style.width = (100 - pct)+'%';
     }
 
     function buildTicks(){
-      const gs = gates();
-      const total = gs.length;
+      const total = gates().length;
       ticksEl.innerHTML = '';
       for (let i = 0; i < total; i++){
         const pct = (i/(total-1))*100;
@@ -498,11 +486,10 @@ Date	Workshop Name
 
     function placeGapBand(){
       xmasBand.style.display = 'none';
-      const total = weeks.length;
-      if (total < 2) return;
+      if (weeks.length < 2) return;
 
       let gapIdx = -1;
-      for (let i=0; i<total-1; i++){
+      for (let i=0; i<weeks.length-1; i++){
         const a = weeks[i].start;
         const b = weeks[i+1].start;
         const days = (b - a) / (1000*60*60*24);
@@ -511,7 +498,7 @@ Date	Workshop Name
       if (gapIdx === -1) return;
 
       const width = timeline.offsetWidth;
-      const step = width/(total-1);
+      const step = width/(weeks.length-1);
 
       let leftPx = step * gapIdx;
       let rightPx = step * (gapIdx + 1);
@@ -527,8 +514,7 @@ Date	Workshop Name
     }
 
     function computeProgressToday(){
-      const today = new Date();
-      return fractionForDate(today);
+      return fractionForDate(new Date());
     }
 
     function updateAll(){
