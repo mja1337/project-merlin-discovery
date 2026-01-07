@@ -78,10 +78,16 @@
       position:relative;
       text-align:center;
       width:110px;
-      z-index:3;
+      z-index:3;                     /* baseline stacking */
       line-height:1.15;
       font-weight:400;               /* make all week headers non-bold */
     }
+
+    /* ✅ IMPORTANT FIX: bring hovered gate + its tooltip above all siblings */
+    .gate:hover{
+      z-index:10000;
+    }
+
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
 
@@ -100,7 +106,7 @@
       min-height:36px;
     }
 
-    /* ✅ Tooltip: fully opaque (no opacity animation = no bleed-through) */
+    /* ✅ Tooltip: fully opaque + no opacity animation */
     .tooltip{
       position:absolute;
       bottom:-10px;
@@ -116,11 +122,12 @@
       text-align:left;
       border-radius:8px;
       padding:10px 12px;
-      z-index:9999;
+      z-index:9999;                  /* high within hovered gate */
       box-shadow:0 8px 20px rgba(0,0,0,.35);
 
       transition:transform .2s ease;
     }
+
     .gate:hover .tooltip{
       visibility:visible;
       transform:translate(-50%, 0);
@@ -206,6 +213,7 @@
     <img id="merlin"
       src="https://github.com/mja1337/project-merlin-discovery/blob/main/merlin_rocket.png?raw=true"
       width="150" height="100" alt="Merlin Rocket"/>
+
     <div class="merlin-tooltip" id="merlinTooltip"></div>
 
     <div class="timeline-line"></div>
