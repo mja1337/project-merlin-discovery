@@ -27,20 +27,26 @@
       opacity:.8;
       margin-bottom:24px
     }
+
+    /* Layout container */
     .timeline-container{
       position:relative;
-      margin:40px auto;
+      margin:60px auto;          /* was 40px */
       max-width:1200px
     }
+
+    /* Gates row */
     .timeline{
       display:flex;
       justify-content:space-between;
       position:relative;
-      margin-top:110px
+      margin-top:160px           /* was 110px */
     }
+
+    /* Main line */
     .timeline-line{
       position:absolute;
-      top:150px;
+      top:185px;                 /* was 150px */
       left:0;
       right:0;
       height:4px;
@@ -49,7 +55,7 @@
     }
     .timeline-gradient{
       position:absolute;
-      top:150px;
+      top:185px;                 /* was 150px */
       left:0;
       right:0;
       height:4px;
@@ -59,17 +65,19 @@
     }
     .timeline-cover{
       position:absolute;
-      top:150px;
+      top:185px;                 /* was 150px */
       right:0;
       height:4px;
       background:#000;
       z-index:2;
       pointer-events:none
     }
+
+    /* Gates */
     .gate{
       position:relative;
       text-align:center;
-      width:120px;
+      width:110px;               /* was 120px */
       z-index:3;
       font-weight:600
     }
@@ -85,6 +93,7 @@
       visibility:visible;
       opacity:1
     }
+
     .tooltip{
       visibility:hidden;
       background:#333;
@@ -93,7 +102,7 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      bottom:10px;
+      bottom:-10px;              /* was 10px */
       left:50%;
       transform:translateX(-50%);
       opacity:0;
@@ -112,7 +121,7 @@
     /* Rocket + tooltip */
     #merlin{
       position:absolute;
-      top:60px;
+      top:10px;                  /* was 60px */
       transition:left .5s;
       z-index:6
     }
@@ -128,7 +137,7 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      top:160px;
+      top:205px;                 /* was 160px */
       left:50%;
       transform:translateX(-50%);
       opacity:0;
@@ -138,10 +147,10 @@
       box-shadow:0 8px 20px rgba(0,0,0,.35)
     }
 
-    /* Week-start ticks, aligned to the exact start of each week */
+    /* Week-start ticks */
     .ticks{
       position:absolute;
-      top:142px;
+      top:177px;                 /* was 142px */
       left:0;
       right:0;
       height:16px;
@@ -160,7 +169,7 @@
     /* Xmas band */
     .holiday-band{
       position:absolute;
-      top:140px;
+      top:175px;                 /* was 140px */
       height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
@@ -169,7 +178,7 @@
     }
     .holiday-band .label{
       position:absolute;
-      top:-22px;
+      top:-28px;                 /* was -22px */
       left:50%;
       transform:translateX(-50%);
       font-size:12px;
@@ -195,22 +204,18 @@
     <div class="timeline-gradient"></div>
     <div class="timeline-cover" id="timelineCover"></div>
 
-    <!-- Week-start ticks -->
     <div class="ticks" id="ticks"></div>
 
-    <!-- Xmas highlight band gets sized/placed by JS -->
     <div class="holiday-band" id="xmasBand">
       <div class="label">Christmas & New Year</div>
     </div>
 
-    <!-- Gates are rendered by JS -->
     <div class="timeline" id="timeline"></div>
   </div>
 
   <script>
     /**********************************************************************
      * DROP-IN SCHEDULE (edit only this section)
-     *
      * Paste TSV/Copy-from-Excel here (Date[TAB]Workshop Name)
      **********************************************************************/
     const WORKSHOPS_TSV = `
@@ -281,7 +286,7 @@ Date	Workshop Name
      **********************************************************************/
     const pad2 = n => String(n).padStart(2, "0");
 
-    function ukToISO(uk){ // "DD/MM/YYYY" -> "YYYY-MM-DD"
+    function ukToISO(uk){
       const [dd, mm, yyyy] = uk.split("/").map(s => s.trim());
       return `${yyyy}-${pad2(mm)}-${pad2(dd)}`;
     }
@@ -290,14 +295,13 @@ Date	Workshop Name
       return `${pad2(d)}/${pad2(m)}/${y}`;
     }
     function isoToDate(iso){
-      // local date at midnight to avoid timezone surprises
       const [y,m,d] = iso.split("-").map(Number);
       return new Date(y, m-1, d);
     }
     function startOfWeekMonday(d){
       const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
       const day = copy.getDay(); // 0 Sun..6 Sat
-      const diff = (day === 0 ? -6 : 1 - day); // back to Monday
+      const diff = (day === 0 ? -6 : 1 - day);
       copy.setDate(copy.getDate() + diff);
       copy.setHours(0,0,0,0);
       return copy;
@@ -332,8 +336,7 @@ Date	Workshop Name
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * BUILD "MILESTONE WEEKS" (NOT every calendar week)
-     * - This matches the original behaviour: one gate per scheduled week.
+     * BUILD "MILESTONE WEEKS" (one gate per scheduled week)
      **********************************************************************/
     function buildMilestoneWeeks(workshops){
       if (!workshops.length) return [];
@@ -342,7 +345,7 @@ Date	Workshop Name
       for (const w of workshops){
         const d = isoToDate(w.date);
         const monday = startOfWeekMonday(d);
-        const key = monday.toISOString().slice(0,10); // YYYY-MM-DD
+        const key = monday.toISOString().slice(0,10);
 
         if (!map.has(key)){
           map.set(key, { start: monday, end: endOfWeekSunday(monday), items: [] });
@@ -360,7 +363,7 @@ Date	Workshop Name
     const weeks = buildMilestoneWeeks(WORKSHOPS);
 
     /**********************************************************************
-     * RENDER TIMELINE (GATES + TOOLTIPS) FROM WEEKS
+     * RENDER TIMELINE (GATES + TOOLTIPS)
      **********************************************************************/
     const timeline = document.getElementById('timeline');
     const subtitle = document.getElementById('subtitle');
@@ -374,12 +377,7 @@ Date	Workshop Name
     function renderTimeline(){
       timeline.innerHTML = weeks.map((w, i) => {
         const weekNum = i + 1;
-
-        const listItems = `<ul>${
-          w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
-        }</ul>`;
-
-        // simple title = first workshop name (original had manual headings)
+        const listItems = `<ul>${w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")}</ul>`;
         const title = escapeHtml(w.items[0].name);
 
         return `
