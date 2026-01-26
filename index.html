@@ -45,7 +45,7 @@
       justify-content:space-between;
       align-items:flex-start;
       position:relative;
-      margin-top:190px;              /* was 170px (more breathing room) */
+      margin-top:190px;
     }
 
     /* TIMELINE (moved down) */
@@ -53,7 +53,7 @@
     .timeline-gradient,
     .timeline-cover{
       position:absolute;
-      top:250px;                     /* was 215px */
+      top:250px;
       left:0;
       right:0;
       height:4px;
@@ -85,6 +85,10 @@
 
     .gate.completed{color:#1db954}
     .gate.current{color:#ff7a00}
+
+    /* Empty week styling */
+    .gate.empty{ color:#888; }
+    .gate.empty small{ opacity:.6; }
 
     .gate .wk-title{
       display:block;
@@ -129,7 +133,7 @@
     /* Merlin (moved down so it stays near the timeline) */
     #merlin{
       position:absolute;
-      top:115px;                     /* was 85px */
+      top:115px;
       transition:left .5s;
       z-index:6;
     }
@@ -142,7 +146,7 @@
       border-radius:8px;
       padding:10px 12px;
       position:absolute;
-      top:270px;                     /* was 235px (follow timeline down) */
+      top:270px;
       left:50%;
       transform:translateX(-50%);
       z-index:7;
@@ -154,7 +158,7 @@
     /* Ticks (follow timeline down) */
     .ticks{
       position:absolute;
-      top:242px;                     /* was 207px */
+      top:242px;
       left:0;
       right:0;
       height:16px;
@@ -173,7 +177,7 @@
     /* Xmas band (follow timeline down) */
     .holiday-band{
       position:absolute;
-      top:240px;                     /* was 205px */
+      top:240px;
       height:10px;
       background:rgba(255,0,0,.12);
       border:1px dashed rgba(255,0,0,.6);
@@ -190,6 +194,7 @@
       padding:2px 6px;
       border-radius:6px;
       border:1px solid rgba(255,0,0,.6);
+      white-space:nowrap;
     }
   </style>
 </head>
@@ -329,11 +334,24 @@ Date	Workshop Name
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * BUILD "MILESTONE WEEKS"
+     * BUILD "MILESTONE WEEKS" (continuous, includes empty weeks)
      **********************************************************************/
-    function buildMilestoneWeeks(workshops){
+    function addDays(d, n){
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      x.setDate(x.getDate() + n);
+      return x;
+    }
+
+    function buildMilestoneWeeksContinuous(workshops){
       if (!workshops.length) return [];
 
+      const firstDate = isoToDate(workshops[0].date);
+      const lastDate  = isoToDate(workshops[workshops.length - 1].date);
+
+      const firstMonday = startOfWeekMonday(firstDate);
+      const lastMonday  = startOfWeekMonday(lastDate);
+
+      // Bucket workshops by week start (Monday)
       const map = new Map();
       for (const w of workshops){
         const d = isoToDate(w.date);
@@ -346,14 +364,19 @@ Date	Workshop Name
         map.get(key).items.push(w);
       }
 
-      const weeks = Array.from(map.values()).sort((a,b) => a.start - b.start);
-      for (const wk of weeks){
-        wk.items.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+      // Build continuous sequence of weeks
+      const weeks = [];
+      for (let cur = new Date(firstMonday); cur <= lastMonday; cur = addDays(cur, 7)){
+        const key = cur.toISOString().slice(0,10);
+        const bucket = map.get(key) || { start: new Date(cur), end: endOfWeekSunday(cur), items: [] };
+        bucket.items.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
+        weeks.push(bucket);
       }
+
       return weeks;
     }
 
-    const weeks = buildMilestoneWeeks(WORKSHOPS);
+    const weeks = buildMilestoneWeeksContinuous(WORKSHOPS);
 
     /**********************************************************************
      * RENDER TIMELINE
@@ -370,17 +393,25 @@ Date	Workshop Name
     function renderTimeline(){
       timeline.innerHTML = weeks.map((w, i) => {
         const weekNum = i + 1;
+        const hasItems = w.items.length > 0;
 
-        const listItems = `<ul>${
-          w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
-        }</ul>`;
+        const listItems = hasItems
+          ? `<ul>${
+              w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
+            }</ul>`
+          : `<div style="opacity:.9;line-height:1.3;">
+               <strong>No workshops scheduled this week.</strong><br>
+               (Placeholder week)
+             </div>`;
+
+        const titleLine = hasItems ? escapeHtml(w.items[0].name) : "No workshops";
 
         return `
-          <div class="gate">
+          <div class="gate ${hasItems ? "" : "empty"}">
             <span class="wk-title">Week ${weekNum}</span>
             <small>${fmtRange(w.start, w.end)}</small>
             <div class="tooltip">
-              <div style="font-weight:400;margin-bottom:6px;">${escapeHtml(w.items[0].name)}</div>
+              <div style="font-weight:400;margin-bottom:6px;">${titleLine}</div>
               ${listItems}
             </div>
           </div>
@@ -470,33 +501,64 @@ Date	Workshop Name
       }
     }
 
+    /**********************************************************************
+     * HOLIDAY BAND (based on runs of empty weeks)
+     * Shows band over the longest run of consecutive empty weeks.
+     **********************************************************************/
     function placeGapBand(){
       xmasBand.style.display = 'none';
       if (weeks.length < 2) return;
 
-      let gapIdx = -1;
-      for (let i=0; i<weeks.length-1; i++){
-        const a = weeks[i].start;
-        const b = weeks[i+1].start;
-        const days = (b - a) / (1000*60*60*24);
-        if (days > 8) { gapIdx = i; break; }
+      // Find longest consecutive run of empty weeks
+      let bestStart = -1, bestLen = 0;
+      let curStart = -1, curLen = 0;
+
+      for (let i = 0; i < weeks.length; i++){
+        const isEmpty = weeks[i].items.length === 0;
+        if (isEmpty){
+          if (curStart === -1) curStart = i;
+          curLen++;
+        } else {
+          if (curLen > bestLen){
+            bestLen = curLen;
+            bestStart = curStart;
+          }
+          curStart = -1;
+          curLen = 0;
+        }
       }
-      if (gapIdx === -1) return;
+      // Handle run ending at final week
+      if (curLen > bestLen){
+        bestLen = curLen;
+        bestStart = curStart;
+      }
+
+      // Only show if the run is meaningful (2+ weeks)
+      if (bestLen < 2) return;
 
       const width = timeline.offsetWidth;
+
+      // Position band relative to gate positions (including endpoints)
       const step = width/(weeks.length-1);
 
-      let leftPx = step * gapIdx;
-      let rightPx = step * (gapIdx + 1);
+      // Start at bestStart, end at bestStart + bestLen - 1
+      let leftPx = step * bestStart;
+      let rightPx = step * (bestStart + bestLen - 1);
 
-      const padding = 10;
+      // Expand slightly to feel like a band, not a pin-line
+      const padding = 20;
       leftPx += padding;
       rightPx -= padding;
 
-      const bandWidth = Math.max(12, rightPx - leftPx);
+      const bandWidth = Math.max(18, rightPx - leftPx);
       xmasBand.style.left = leftPx + 'px';
       xmasBand.style.width = bandWidth + 'px';
       xmasBand.style.display = 'block';
+
+      // Optional: change label text based on dates if you want it more generic
+      // const s = weeks[bestStart].start;
+      // const e = weeks[bestStart + bestLen - 1].end;
+      // xmasBand.querySelector('.label').textContent = `No workshops (${fmtRange(s,e)})`;
     }
 
     function computeProgressToday(){
