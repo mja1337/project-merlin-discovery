@@ -2,225 +2,482 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Project Merlin — Discovery Timeline (Weekly)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --grad-red:#ff0000;
-      --grad-orange:#ff7a00;
-      --grad-green:#1db954;
-      --orange-stop:60%;
+      /* Liquidline-ish: black + red */
+      --bg0:#05060A;
+      --bg1:#0B0D12;
+
+      --red:#E10613;
+      --red2:#FF2A2A;
+
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.65);
+
+      --border:rgba(255,255,255,.10);
+      --border2:rgba(255,255,255,.18);
+
+      --shadow: 0 18px 50px rgba(0,0,0,.55);
+      --shadow2: 0 10px 24px rgba(0,0,0,.42);
+
+      --radius: 18px;
+      --radius2: 14px;
+
+      --focus: rgba(255, 42, 42, .9);
+
+      /* JS sets these so ALL weeks fit (no scrolling) */
+      --gateW: 90px;
+      --gateGap: 10px;
+
+      /* Vertical layout controls */
+      --rowTop: 120px;
+      --trackTop: 170px;
+      --ticksTop: 162px;
+      --bandTop: 156px;
+
+      /* >>> CHANGED: rocket lower so it doesn't overlap the week pills <<< */
+      --merlinTop: 83px;        /* was 30px */
+      --merlinTipTop: 225px;    /* was 192px */
     }
 
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+
     body{
-      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-      background:#f5f5f5;
-      color:#333;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       margin:0;
-      padding:20px;
+      padding: 14px;
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 14% 12%, rgba(225,6,19,.22), transparent 62%),
+        radial-gradient(900px 520px at 88% 18%, rgba(255,42,42,.10), transparent 64%),
+        radial-gradient(900px 520px at 50% 90%, rgba(225,6,19,.10), transparent 62%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
+    .wrap{ width:100%; max-width:none; margin:0; }
+
+    header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      padding: 8px 0 4px;
     }
 
     h1{
+      margin:0;
+      font-size: clamp(20px, 2.2vw, 34px);
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      line-height: 1.05;
+      background: linear-gradient(90deg, #fff, rgba(255,255,255,.70));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
       text-align:center;
-      color:#ff0000;
-      margin-bottom:4px;
     }
 
     .sub{
       text-align:center;
-      opacity:.8;
-      margin-bottom:24px;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 1200px;
+      line-height: 1.45;
     }
 
-    /* Container */
+    .panel{
+      margin-top: 14px;
+      padding: 16px 12px 18px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 50px rgba(0,0,0,.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position:relative;
+      overflow: visible;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.05), transparent 60%),
+        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.05), transparent 60%),
+        radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,.05), transparent 60%),
+        radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,.05), transparent 60%);
+      pointer-events:none;
+      opacity:.85;
+    }
+
     .timeline-container{
       position:relative;
-      margin:60px auto;
-      max-width:1200px;
+      margin: 6px auto 0;
+      padding: 0 10px 8px;
+      overflow: visible;
     }
 
-    /* Gates row (week headers) */
+    /* Weeks row */
     .timeline{
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       position:relative;
-      margin-top:190px;
+      margin-top: var(--rowTop);
+      gap: var(--gateGap);
+      width: 100%;
+      padding: 0;
+      z-index: 5; /* ensure week pills remain above track */
     }
 
-    /* TIMELINE (moved down) */
+    /* Track elements */
+    .timeline-line,
+    .timeline-gradient,
+    .timeline-cover,
+    .ticks,
+    .holiday-band{
+      position:absolute;
+      left:0;
+      width:100%;
+    }
+
     .timeline-line,
     .timeline-gradient,
     .timeline-cover{
-      position:absolute;
-      top:250px;
-      left:0;
-      right:0;
-      height:4px;
+      top: var(--trackTop);
+      height:6px;
+      border-radius:999px;
     }
-    .timeline-line{ background:#000; z-index:0; }
+
+    .timeline-line{ background: rgba(255,255,255,.14); z-index:0; }
+
     .timeline-gradient{
       z-index:1;
       pointer-events:none;
-      background:linear-gradient(to right,var(--grad-red) 0%,var(--grad-orange) var(--orange-stop),var(--grad-green) 100%);
+      background: linear-gradient(90deg, rgba(225,6,19,.95), rgba(255,42,42,.85));
+      opacity:.95;
+      box-shadow: 0 0 0 1px rgba(225,6,19,.08), 0 10px 30px rgba(225,6,19,.12);
     }
+
     .timeline-cover{
-      background:#000;
+      background: rgba(5,6,10,.68);
       z-index:2;
       pointer-events:none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     /* Gates */
     .gate{
       position:relative;
       text-align:center;
-      width:110px;
-      z-index:3;
+      width: var(--gateW);
+      flex: 0 0 var(--gateW);
+      z-index:6;
       line-height:1.15;
-      font-weight:400;
+      user-select:none;
+      outline:none;
     }
-
-    /* Bring hovered gate above siblings */
     .gate:hover{ z-index:10000; }
 
-    .gate.completed{color:#1db954}
-    .gate.current{color:#ff7a00}
+    .gate .card{
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding: 9px 8px 10px;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      min-height: 56px;
+    }
 
-    /* Empty week styling */
-    .gate.empty{ color:#888; }
-    .gate.empty small{ opacity:.6; }
+    .gate:hover .card{
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.07);
+      border-color: var(--border2);
+      box-shadow: 0 14px 28px rgba(0,0,0,.32);
+    }
+
+    .gate:focus-visible .card{
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .gate.past .card{ background: rgba(255,255,255,.045); }
+    .gate.future .card{ background: rgba(255,255,255,.03); }
+
+    .gate.has-items .card{
+      border-color: rgba(225,6,19,.42);
+      box-shadow: 0 0 0 3px rgba(225,6,19,.10), 0 10px 22px rgba(0,0,0,.24);
+    }
+
+    .gate.has-items.past .card{
+      background: linear-gradient(180deg, rgba(225,6,19,.16), rgba(255,255,255,.035));
+    }
+
+    .gate.has-items.future .card{
+      background: linear-gradient(180deg, rgba(225,6,19,.12), rgba(255,255,255,.025));
+      box-shadow: 0 0 0 3px rgba(225,6,19,.12), 0 14px 28px rgba(0,0,0,.30);
+    }
+
+    .gate.current .card{
+      border-color: rgba(255,42,42,.85);
+      background: linear-gradient(180deg, rgba(255,42,42,.20), rgba(255,255,255,.03));
+      box-shadow: 0 0 0 4px rgba(255,42,42,.18), 0 16px 34px rgba(0,0,0,.34);
+    }
+
+    .gate.empty .card{
+      border-color: rgba(255,255,255,.09);
+      background: rgba(255,255,255,.025);
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+    }
+    .gate.empty.future .card{
+      border-color: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
+      opacity: .9;
+    }
 
     .gate .wk-title{
       display:block;
-      font-weight:400;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .02em;
+      color: rgba(255,255,255,.92);
+      white-space: nowrap;
     }
 
     .gate small{
       display:block;
-      font-weight:400;
-      opacity:.75;
-      margin-top:6px;
-      min-height:36px;
+      font-weight: 650;
+      color: rgba(255,255,255,.70);
+      margin-top: 6px;
+      font-size: 11px;
+      line-height: 1.15;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      word-break: keep-all;
     }
 
-    /* Tooltip: fully opaque */
+    /* Tooltip */
     .tooltip{
       position:absolute;
-      bottom:-10px;
+      bottom:-12px;
       left:50%;
-      transform:translate(-50%, 6px);
+      transform:translate(-50%, 10px);
 
       visibility:hidden;
+      opacity:0;
       pointer-events:none;
 
-      width:340px;
-      background:#222;
-      color:#fff;
-      text-align:left;
-      border-radius:8px;
-      padding:10px 12px;
-      z-index:9999;
-      box-shadow:0 8px 20px rgba(0,0,0,.35);
+      width: 380px;
+      max-width: min(460px, 82vw);
 
-      transition:transform .2s ease;
+      background: rgba(12, 13, 18, .94);
+      color: rgba(255,255,255,.92);
+      text-align:left;
+      border-radius: var(--radius2);
+      padding: 12px;
+      z-index:9999;
+
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 24px rgba(0,0,0,.42);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+
+      transition: transform .18s ease, opacity .18s ease, visibility .18s ease;
     }
-    .gate:hover .tooltip{
+
+    .tooltip::before{
+      content:"";
+      position:absolute;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: rgba(12, 13, 18, .94);
+      border-left: 1px solid rgba(255,255,255,.12);
+      border-top: 1px solid rgba(255,255,255,.12);
+      rotate: 45deg;
+    }
+
+    .gate:hover .tooltip,
+    .gate:focus-visible .tooltip{
       visibility:visible;
+      opacity:1;
       transform:translate(-50%, 0);
     }
-    .tooltip ul{margin:0;padding-left:18px}
 
-    /* Merlin (moved down so it stays near the timeline) */
+    .gate.edge-right .tooltip{
+      left:auto;
+      right:0;
+      transform: translate(0, 10px);
+    }
+    .gate.edge-right:hover .tooltip,
+    .gate.edge-right:focus-visible .tooltip{
+      transform: translate(0, 0);
+    }
+    .gate.edge-right .tooltip::before{
+      left:auto;
+      right:18px;
+      transform:none;
+    }
+
+    .gate.edge-left .tooltip{
+      left:0;
+      transform: translate(0, 10px);
+    }
+    .gate.edge-left:hover .tooltip,
+    .gate.edge-left:focus-visible .tooltip{
+      transform: translate(0, 0);
+    }
+    .gate.edge-left .tooltip::before{
+      left:18px;
+      transform:none;
+    }
+
+    .tooltip ul{
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: rgba(255,255,255,.86);
+    }
+    .tooltip li{ margin: 6px 0; line-height: 1.35; }
+    .tooltip strong{ color: rgba(255,255,255,.98); }
+
+    /* Merlin rocket */
     #merlin{
       position:absolute;
-      top:115px;
+      top: var(--merlinTop);
       transition:left .5s;
-      z-index:6;
+      z-index:4; /* sits above track but below pills/tooltips */
+      filter: drop-shadow(0 18px 26px rgba(0,0,0,.55));
+      will-change: left;
+      pointer-events:auto;
     }
 
     .merlin-tooltip{
       visibility:hidden;
-      background:#000;
-      color:#fff;
+      opacity:0;
+      background: rgba(12, 13, 18, .94);
+      color: rgba(255,255,255,.92);
       text-align:left;
-      border-radius:8px;
-      padding:10px 12px;
+      border-radius: var(--radius2);
+      padding: 12px;
       position:absolute;
-      top:270px;
+      top: var(--merlinTipTop);
       left:50%;
-      transform:translateX(-50%);
+      transform:translate(-50%, 8px);
       z-index:7;
-      width:360px;
-      box-shadow:0 8px 20px rgba(0,0,0,.35);
+      width: 420px;
+      max-width: min(560px, 88vw);
+      box-shadow: 0 10px 24px rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform .18s ease, opacity .18s ease, visibility .18s ease;
+      pointer-events:none;
     }
-    #merlin:hover + .merlin-tooltip{ visibility:visible; }
+    #merlin:hover + .merlin-tooltip{
+      visibility:visible;
+      opacity:1;
+      transform:translate(-50%, 0);
+    }
 
-    /* Ticks (follow timeline down) */
+    /* Ticks */
     .ticks{
-      position:absolute;
-      top:242px;
-      left:0;
-      right:0;
-      height:16px;
-      z-index:4;
+      top: var(--ticksTop);
+      height:22px;
+      z-index:3;
+      pointer-events:none;
     }
     .ticks .tick{
       position:absolute;
-      top:0;
-      width:16px;
-      height:16px;
-      border-radius:50%;
-      background:#ff0000;
-      transform:translateX(-50%);
+      top:3px;
+      width: 12px;
+      height: 12px;
+      border-radius:999px;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.14);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
-    /* Xmas band (follow timeline down) */
+    /* Holiday band */
     .holiday-band{
-      position:absolute;
-      top:240px;
-      height:10px;
-      background:rgba(255,0,0,.12);
-      border:1px dashed rgba(255,0,0,.6);
+      top: var(--bandTop);
+      height: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px dashed rgba(255,255,255,.22);
+      border-radius: 999px;
       z-index:2;
       display:none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .holiday-band .label{
       position:absolute;
-      top:-28px;
+      top: -30px;
       left:50%;
       transform:translateX(-50%);
-      font-size:12px;
-      background:#fff;
-      padding:2px 6px;
-      border-radius:6px;
-      border:1px solid rgba(255,0,0,.6);
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      background: rgba(12, 13, 18, .94);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
       white-space:nowrap;
+      box-shadow: 0 10px 24px rgba(0,0,0,.36);
+    }
+
+    .tight .gate .wk-title{ font-size: 10px; }
+    .tight .gate small{ font-size: 9px; }
+    .super-tight .gate .wk-title{ font-size: 9px; }
+    .super-tight .gate small{ font-size: 8px; }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; scroll-behavior:auto !important; }
     }
   </style>
 </head>
 
 <body>
-  <h1>Project Merlin — Discovery Timeline</h1>
-  <div class="sub" id="subtitle"></div>
+  <div class="wrap" id="wrap">
+    <header>
+      <h1>Project Merlin — Discovery Timeline</h1>
+      <div class="sub" id="subtitle"></div>
+    </header>
 
-  <div class="timeline-container">
-    <img id="merlin"
-      src="https://github.com/mja1337/project-merlin-discovery/blob/main/merlin_rocket.png?raw=true"
-      width="150" height="100" alt="Merlin Rocket"/>
+    <section class="panel">
+      <div class="timeline-container" id="timelineContainer">
+        <img id="merlin"
+          src="https://github.com/mja1337/project-merlin-discovery/blob/main/merlin_rocket.png?raw=true"
+          width="150" height="100" alt="Merlin Rocket"/>
 
-    <div class="merlin-tooltip" id="merlinTooltip"></div>
+        <div class="merlin-tooltip" id="merlinTooltip"></div>
 
-    <div class="timeline-line"></div>
-    <div class="timeline-gradient"></div>
-    <div class="timeline-cover" id="timelineCover"></div>
+        <div class="timeline-line"></div>
+        <div class="timeline-gradient"></div>
+        <div class="timeline-cover" id="timelineCover"></div>
 
-    <div class="ticks" id="ticks"></div>
+        <div class="ticks" id="ticks"></div>
 
-    <div class="holiday-band" id="xmasBand">
-      <div class="label">Christmas & New Year</div>
-    </div>
+        <div class="holiday-band" id="xmasBand">
+          <div class="label">Christmas & New Year</div>
+        </div>
 
-    <div class="timeline" id="timeline"></div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -283,7 +540,6 @@ Date	Workshop Name
      * PARSING + DATE UTILITIES
      **********************************************************************/
     const pad2 = n => String(n).padStart(2, "0");
-
     function ukToISO(uk){
       const [dd, mm, yyyy] = uk.split("/").map(s => s.trim());
       return `${yyyy}-${pad2(mm)}-${pad2(dd)}`;
@@ -298,7 +554,7 @@ Date	Workshop Name
     }
     function startOfWeekMonday(d){
       const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      const day = copy.getDay(); // 0 Sun..6 Sat
+      const day = copy.getDay();
       const diff = (day === 0 ? -6 : 1 - day);
       copy.setDate(copy.getDate() + diff);
       copy.setHours(0,0,0,0);
@@ -326,7 +582,6 @@ Date	Workshop Name
       out.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
       return out;
     }
-
     function escapeHtml(s){
       return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
@@ -334,37 +589,31 @@ Date	Workshop Name
     const WORKSHOPS = parseWorkshopsFromTSV(WORKSHOPS_TSV);
 
     /**********************************************************************
-     * BUILD "MILESTONE WEEKS" (continuous, includes empty weeks)
+     * BUILD WEEKS
      **********************************************************************/
     function addDays(d, n){
       const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
       x.setDate(x.getDate() + n);
       return x;
     }
-
     function buildMilestoneWeeksContinuous(workshops){
       if (!workshops.length) return [];
-
       const firstDate = isoToDate(workshops[0].date);
       const lastDate  = isoToDate(workshops[workshops.length - 1].date);
-
       const firstMonday = startOfWeekMonday(firstDate);
       const lastMonday  = startOfWeekMonday(lastDate);
 
-      // Bucket workshops by week start (Monday)
       const map = new Map();
       for (const w of workshops){
         const d = isoToDate(w.date);
         const monday = startOfWeekMonday(d);
         const key = monday.toISOString().slice(0,10);
-
         if (!map.has(key)){
           map.set(key, { start: monday, end: endOfWeekSunday(monday), items: [] });
         }
         map.get(key).items.push(w);
       }
 
-      // Build continuous sequence of weeks
       const weeks = [];
       for (let cur = new Date(firstMonday); cur <= lastMonday; cur = addDays(cur, 7)){
         const key = cur.toISOString().slice(0,10);
@@ -372,22 +621,23 @@ Date	Workshop Name
         bucket.items.sort((a,b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name));
         weeks.push(bucket);
       }
-
       return weeks;
     }
-
     const weeks = buildMilestoneWeeksContinuous(WORKSHOPS);
 
     /**********************************************************************
-     * RENDER TIMELINE
+     * RENDER
      **********************************************************************/
+    const wrap = document.getElementById('wrap');
     const timeline = document.getElementById('timeline');
     const subtitle = document.getElementById('subtitle');
 
     function fmtRange(start, end){
-      const s = `${pad2(start.getDate())} ${start.toLocaleString("en-GB",{month:"short"})} ${start.getFullYear()}`;
-      const e = `${pad2(end.getDate())} ${end.toLocaleString("en-GB",{month:"short"})} ${end.getFullYear()}`;
-      return `${s} – ${e}`;
+      const sD = pad2(start.getDate());
+      const sM = start.toLocaleString("en-GB",{month:"short"});
+      const eD = pad2(end.getDate());
+      const eM = end.toLocaleString("en-GB",{month:"short"});
+      return `${sD} ${sM}–${eD} ${eM}`;
     }
 
     function renderTimeline(){
@@ -396,22 +646,22 @@ Date	Workshop Name
         const hasItems = w.items.length > 0;
 
         const listItems = hasItems
-          ? `<ul>${
-              w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")
-            }</ul>`
-          : `<div style="opacity:.9;line-height:1.3;">
+          ? `<ul>${w.items.map(x => `<li>${isoToUK(x.date)}: ${escapeHtml(x.name)}</li>`).join("")}</ul>`
+          : `<div style="opacity:.95;line-height:1.35;">
                <strong>No workshops scheduled this week.</strong><br>
-               (Placeholder week)
+               <span style="color: rgba(255,255,255,.72);">(Placeholder week)</span>
              </div>`;
 
         const titleLine = hasItems ? escapeHtml(w.items[0].name) : "No workshops";
 
         return `
-          <div class="gate ${hasItems ? "" : "empty"}">
-            <span class="wk-title">Week ${weekNum}</span>
-            <small>${fmtRange(w.start, w.end)}</small>
+          <div class="gate ${hasItems ? "has-items" : "empty"}" tabindex="0" aria-label="Week ${weekNum}">
+            <div class="card">
+              <span class="wk-title">Week ${weekNum}</span>
+              <small>${fmtRange(w.start, w.end)}</small>
+            </div>
             <div class="tooltip">
-              <div style="font-weight:400;margin-bottom:6px;">${titleLine}</div>
+              <div style="font-weight:800;margin-bottom:6px;">${titleLine}</div>
               ${listItems}
             </div>
           </div>
@@ -421,14 +671,14 @@ Date	Workshop Name
       const first = weeks[0]?.start;
       const last = weeks[weeks.length-1]?.end;
       subtitle.textContent = first && last
-        ? `Weekly milestones from ${fmtRange(first, first).slice(0, 11)} to ${fmtRange(last, last).slice(0, 11)} (Discovery only)`
+        ? `Weekly milestones from ${pad2(first.getDate())} ${first.toLocaleString("en-GB",{month:"short"})} ${first.getFullYear()} to ${pad2(last.getDate())} ${last.toLocaleString("en-GB",{month:"short"})} ${last.getFullYear()} (Discovery only)`
         : `Weekly milestones (Discovery only)`;
     }
 
     renderTimeline();
 
     /**********************************************************************
-     * MERLIN POSITIONING / PROGRESS
+     * POSITIONING / PROGRESS
      **********************************************************************/
     const gates = () => document.querySelectorAll('.gate');
     const merlin = document.getElementById('merlin');
@@ -436,12 +686,8 @@ Date	Workshop Name
     const cover = document.getElementById('timelineCover');
     const xmasBand = document.getElementById('xmasBand');
     const ticksEl = document.getElementById('ticks');
-
-    function leftForIndex(progress){
-      const gs = gates();
-      const fraction = clamp(progress/(gs.length-1), 0, 1);
-      return (fraction * timeline.offsetWidth) - (merlin.offsetWidth/2);
-    }
+    const lineEl = document.querySelector('.timeline-line');
+    const gradEl = document.querySelector('.timeline-gradient');
 
     function fractionForDate(d){
       const ws = weeks.map(w => new Date(w.start));
@@ -468,48 +714,85 @@ Date	Workshop Name
       return total-1;
     }
 
-    function updateMerlinPosition(progress){
-      merlin.style.left = leftForIndex(progress) + 'px';
-      const idx = clamp(Math.floor(progress), 0, gates().length-1);
+    function syncTrackGeometry(){
+      const left = timeline.offsetLeft;
+      const width = timeline.offsetWidth;
 
-      gates().forEach((g,i)=>{
-        g.classList.remove('completed','current');
-        if (i < idx) g.classList.add('completed');
-        else if (i === idx) g.classList.add('current');
+      for (const el of [lineEl, gradEl, ticksEl, xmasBand]){
+        el.style.left = left + 'px';
+        el.style.width = width + 'px';
+      }
+      cover.style.width = width + 'px';
+    }
+
+    function gateCenters(){
+      const gs = gates();
+      const tRect = timeline.getBoundingClientRect();
+      return Array.from(gs).map(g => {
+        const r = g.getBoundingClientRect();
+        return (r.left - tRect.left) + (r.width/2);
       });
+    }
 
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function clampPx(n){ return `${Math.max(0, n)}px`; }
+    function xForProgress(progress){
+      const centers = gateCenters();
+      const n = centers.length;
+      if (n === 0) return 0;
+
+      const i0 = clamp(Math.floor(progress), 0, n-1);
+      const i1 = clamp(i0 + 1, 0, n-1);
+      const t = clamp(progress - i0, 0, 1);
+
+      return lerp(centers[i0], centers[i1], t);
+    }
+
+    function setTimeClasses(progress){
+      const idx = clamp(Math.floor(progress), 0, gates().length-1);
+      const gs = gates();
+
+      gs.forEach((g,i)=>{
+        g.classList.remove('past','current','future');
+        if (i < idx) g.classList.add('past');
+        else if (i === idx) g.classList.add('current');
+        else g.classList.add('future');
+      });
+    }
+
+    function updateMerlinPosition(progress){
+      const x = xForProgress(progress);
+      merlin.style.left = clampPx(timeline.offsetLeft + x - (merlin.offsetWidth/2));
+
+      const idx = clamp(Math.floor(progress), 0, gates().length-1);
       const tip = gates()[idx].querySelector('.tooltip').innerHTML;
       merlinTooltip.innerHTML = `<strong>Current Week:</strong><br>${tip}`;
     }
 
     function updateCover(progress){
-      const fraction = clamp(progress/(gates().length-1),0,1);
-      const pct = (fraction*100).toFixed(4);
-      cover.style.left = pct+'%';
-      cover.style.width = (100 - pct)+'%';
+      const trackW = timeline.offsetWidth;
+      const x = xForProgress(progress);
+
+      const leftPx = timeline.offsetLeft + x;
+      cover.style.left = leftPx + 'px';
+      cover.style.width = Math.max(0, trackW - x) + 'px';
     }
 
     function buildTicks(){
-      const total = gates().length;
+      const centers = gateCenters();
       ticksEl.innerHTML = '';
-      for (let i = 0; i < total; i++){
-        const pct = (i/(total-1))*100;
+      for (const x of centers){
         const el = document.createElement('div');
         el.className = 'tick';
-        el.style.left = pct + '%';
+        el.style.left = x + 'px';
         ticksEl.appendChild(el);
       }
     }
 
-    /**********************************************************************
-     * HOLIDAY BAND (based on runs of empty weeks)
-     * Shows band over the longest run of consecutive empty weeks.
-     **********************************************************************/
     function placeGapBand(){
       xmasBand.style.display = 'none';
       if (weeks.length < 2) return;
 
-      // Find longest consecutive run of empty weeks
       let bestStart = -1, bestLen = 0;
       let curStart = -1, curLen = 0;
 
@@ -527,38 +810,64 @@ Date	Workshop Name
           curLen = 0;
         }
       }
-      // Handle run ending at final week
       if (curLen > bestLen){
         bestLen = curLen;
         bestStart = curStart;
       }
-
-      // Only show if the run is meaningful (2+ weeks)
       if (bestLen < 2) return;
 
-      const width = timeline.offsetWidth;
+      const centers = gateCenters();
+      const startIdx = bestStart;
+      const endIdx = bestStart + bestLen - 1;
 
-      // Position band relative to gate positions (including endpoints)
-      const step = width/(weeks.length-1);
+      const pad = 22;
+      const left = Math.max(0, centers[startIdx] - pad);
+      const right = Math.min(timeline.offsetWidth, centers[endIdx] + pad);
 
-      // Start at bestStart, end at bestStart + bestLen - 1
-      let leftPx = step * bestStart;
-      let rightPx = step * (bestStart + bestLen - 1);
-
-      // Expand slightly to feel like a band, not a pin-line
-      const padding = 20;
-      leftPx += padding;
-      rightPx -= padding;
-
-      const bandWidth = Math.max(18, rightPx - leftPx);
-      xmasBand.style.left = leftPx + 'px';
-      xmasBand.style.width = bandWidth + 'px';
+      xmasBand.style.left = (timeline.offsetLeft + left) + 'px';
+      xmasBand.style.width = Math.max(18, right - left) + 'px';
       xmasBand.style.display = 'block';
+    }
 
-      // Optional: change label text based on dates if you want it more generic
-      // const s = weeks[bestStart].start;
-      // const e = weeks[bestStart + bestLen - 1].end;
-      // xmasBand.querySelector('.label').textContent = `No workshops (${fmtRange(s,e)})`;
+    function applyFit(){
+      const n = weeks.length;
+      const available = timeline.offsetWidth;
+
+      let gap = 12;
+      const maxW = 140;
+      const minW = 58;
+
+      let w = (available - gap * (n - 1)) / n;
+
+      if (w < minW){
+        gap = 8;
+        w = (available - gap * (n - 1)) / n;
+      }
+      if (w < minW){
+        gap = 6;
+        w = (available - gap * (n - 1)) / n;
+      }
+
+      w = clamp(w, minW, maxW);
+
+      document.documentElement.style.setProperty('--gateW', w.toFixed(2) + 'px');
+      document.documentElement.style.setProperty('--gateGap', gap + 'px');
+
+      wrap.classList.toggle('tight', w <= 78);
+      wrap.classList.toggle('super-tight', w <= 66);
+    }
+
+    function markEdgeGates(){
+      const gs = gates();
+      gs.forEach(g => g.classList.remove('edge-left','edge-right'));
+      if (gs.length === 0) return;
+
+      const vpPad = 10;
+      for (const g of gs){
+        const r = g.getBoundingClientRect();
+        if (r.left < 220 + vpPad) g.classList.add('edge-left');
+        if (window.innerWidth - r.right < 220 + vpPad) g.classList.add('edge-right');
+      }
     }
 
     function computeProgressToday(){
@@ -566,7 +875,14 @@ Date	Workshop Name
     }
 
     function updateAll(){
+      applyFit();
+
       const progress = computeProgressToday();
+      setTimeClasses(progress);
+
+      syncTrackGeometry();
+      markEdgeGates();
+
       buildTicks();
       updateMerlinPosition(progress);
       updateCover(progress);
@@ -575,6 +891,7 @@ Date	Workshop Name
 
     updateAll();
     window.addEventListener('resize', updateAll);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateAll);
   </script>
 </body>
 </html>
