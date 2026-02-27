@@ -789,41 +789,29 @@ Date	Workshop Name
       }
     }
 
-    function placeGapBand(){
+    function placeHolidayBandFixed(){
       xmasBand.style.display = 'none';
       if (weeks.length < 2) return;
-
-      let bestStart = -1, bestLen = 0;
-      let curStart = -1, curLen = 0;
-
-      for (let i = 0; i < weeks.length; i++){
-        const isEmpty = weeks[i].items.length === 0;
-        if (isEmpty){
-          if (curStart === -1) curStart = i;
-          curLen++;
-        } else {
-          if (curLen > bestLen){
-            bestLen = curLen;
-            bestStart = curStart;
-          }
-          curStart = -1;
-          curLen = 0;
-        }
-      }
-      if (curLen > bestLen){
-        bestLen = curLen;
-        bestStart = curStart;
-      }
-      if (bestLen < 2) return;
-
-      const centers = gateCenters();
-      const startIdx = bestStart;
-      const endIdx = bestStart + bestLen - 1;
-
-      const pad = 22;
-      const left = Math.max(0, centers[startIdx] - pad);
-      const right = Math.min(timeline.offsetWidth, centers[endIdx] + pad);
-
+    
+      // Set your holiday window (edit if you want different)
+      const holidayStart = new Date(2025, 11, 24); // 24 Dec 2025
+      const holidayEnd   = new Date(2026, 0, 2);   // 02 Jan 2026
+    
+      // Only show if the holiday range overlaps the rendered timeline
+      const tlStart = weeks[0].start;
+      const tlEnd = weeks[weeks.length - 1].end;
+      if (holidayEnd < tlStart || holidayStart > tlEnd) return;
+    
+      const p0 = clamp(fractionForDate(holidayStart), 0, weeks.length - 1);
+      const p1 = clamp(fractionForDate(holidayEnd),   0, weeks.length - 1);
+    
+      const x0 = xForProgress(p0);
+      const x1 = xForProgress(p1);
+    
+      const pad = 18;
+      const left = Math.max(0, Math.min(x0, x1) - pad);
+      const right = Math.min(timeline.offsetWidth, Math.max(x0, x1) + pad);
+    
       xmasBand.style.left = (timeline.offsetLeft + left) + 'px';
       xmasBand.style.width = Math.max(18, right - left) + 'px';
       xmasBand.style.display = 'block';
@@ -886,7 +874,7 @@ Date	Workshop Name
       buildTicks();
       updateMerlinPosition(progress);
       updateCover(progress);
-      placeGapBand();
+      placeHolidayBandFixed();
     }
 
     updateAll();
